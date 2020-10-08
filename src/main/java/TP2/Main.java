@@ -1,7 +1,7 @@
 package TP2;
 
-import java.nio.file.Paths;
 import java.io.IOException;
+import java.nio.file.Paths;
 
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;

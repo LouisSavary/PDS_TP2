@@ -1,12 +1,11 @@
 package TP2;
 
+import static org.junit.Assert.assertNotEquals;
+
 import java.util.ArrayList;
-import junit.framework.TestCase;
-import org.junit.*;
 
 import TP2.ASD.Int;
-
-import static org.junit.Assert.assertNotEquals;
+import junit.framework.TestCase;
 
 
 public class SymbolTableTest extends TestCase {
