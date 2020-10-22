@@ -1,6 +1,7 @@
 package TP2;
 
 import java.util.List;
+
 import java.util.ArrayList;
 
 // This file contains a simple LLVM IR representation
@@ -190,4 +191,44 @@ public class Llvm {
 	}
 
 	// TODO : other instructions
+	static public class Assign extends Instruction {
+		String var_name;
+		Type type;
+		String value;
+
+		public Assign(String var_name, Type type, String expr) {
+			this.var_name 	= var_name;
+			this.type		= type;
+			this.value 		= expr;
+		}
+
+		public String toString() {
+			return var_name + " = load " + type + " " + value + "\n";
+		}
+	}
+	
+	static public class Declare extends Instruction {
+		Type type;
+		String name;
+		int size;
+		
+		public Declare(Type type, String name, int size) {
+			this.name = name;
+			this.type = type;
+			this.size = size;
+		}
+		
+		@Override
+		public String toString() {
+			// TODO Auto-generated method stub
+			if (size == 1)
+				return name + " = alloca " + type;
+			else {
+				return name + " = alloca [" + size + " x " + type + "]";
+			}
+		}
+		
+	}
+
+	
 }

@@ -4,6 +4,8 @@ import static org.junit.Assert.assertNotEquals;
 
 import java.util.ArrayList;
 
+import org.junit.Test;
+
 import TP2.ASD.Int;
 import junit.framework.TestCase;
 
