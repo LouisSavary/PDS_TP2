@@ -1,7 +1,8 @@
-package TP2.ASD;
+package TP2.ASD.expressions;
 
 import TP2.Llvm;
-import TP2.TypeException;
+import TP2.ASD.types.Type;
+import TP2.exceptions.TypeException;
 
 public abstract class Expression {
     public abstract String pp();

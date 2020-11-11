@@ -1,8 +1,8 @@
-package TP2.ASD;
+package TP2.ASD.expressions;
 
 import TP2.Llvm;
-import TP2.TypeException;
 import TP2.Utils;
+import TP2.exceptions.TypeException;
 
 public class MulExpression extends Expression {
 	private Expression left, right;

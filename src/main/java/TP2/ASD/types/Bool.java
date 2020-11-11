@@ -2,16 +2,16 @@ package TP2.ASD.types;
 
 import TP2.Llvm;
 
-public class Int extends Type {
+public class Bool extends Type {
     public String pp() {
-      return "INT";
+      return "BOOL";
     }
 
     @Override public boolean equals(Object obj) {
-      return obj instanceof Int;
+      return obj instanceof Bool;
     }
 
     public Llvm.Type toLlvmType() {
-      return new Llvm.Int();
+      return new Llvm.Bool();
     }
   }

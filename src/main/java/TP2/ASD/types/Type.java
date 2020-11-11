@@ -1,4 +1,4 @@
-package TP2.ASD;
+package TP2.ASD.types;
 
 import TP2.Llvm;
 

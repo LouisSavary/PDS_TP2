@@ -8,6 +8,7 @@ import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 
 import TP2.ASD.Program;
+import TP2.exceptions.TypeException;
 
 public class Main {
   public static void main(String[] args) {

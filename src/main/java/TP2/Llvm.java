@@ -79,6 +79,12 @@ public class Llvm {
 		}
 	}
 
+	static public class Bool extends Type {
+		public String toString() {
+			return "i1";
+		}
+	}
+
 	// TODO : other types
 
 	// LLVM IR Instructions
@@ -121,7 +127,7 @@ public class Llvm {
 			return lvalue + " = mul " + type + " " + left + ", " + right + "\n";
 		}
 	}
-	
+
 	static public class Sub extends Instruction {
 		Type type;
 		String left;
@@ -139,7 +145,7 @@ public class Llvm {
 			return lvalue + " = sub " + type + " " + left + ", " + right + "\n";
 		}
 	}
-	
+
 	static public class Div extends Instruction {
 		Type type;
 		String left;
@@ -157,7 +163,7 @@ public class Llvm {
 			return lvalue + " = udiv " + type + " " + left + ", " + right + "\n";
 		}
 	}
-	
+
 	static public class Mod extends Instruction {
 		Type type;
 		String left;
@@ -197,38 +203,118 @@ public class Llvm {
 		String value;
 
 		public Assign(String var_name, Type type, String expr) {
-			this.var_name 	= var_name;
-			this.type		= type;
-			this.value 		= expr;
+			this.var_name = var_name;
+			this.type = type;
+			this.value = expr;
 		}
 
 		public String toString() {
-			return var_name + " = load " + type + " " + value + "\n";
+			// store i32 0, i32∗ %i
+			return "store " + type + " " + value + ", " + type + "* " + var_name + "\n";
 		}
 	}
-	
+
+	static public class Ident extends Instruction {
+		String var_name;
+		Type type;
+		List<String> args;
+
+		public Ident(String var_name, Type type, List<String> args) {
+			this.var_name = var_name;
+			this.type = type;
+			this.args = args;
+		}
+
+		public String toString() {
+			if (args == null)
+				return "";
+			//TODO les fonx
+			return type + " %" + var_name;
+		}
+	}
+
 	static public class Declare extends Instruction {
 		Type type;
 		String name;
 		int size;
-		
+
 		public Declare(Type type, String name, int size) {
 			this.name = name;
 			this.type = type;
 			this.size = size;
 		}
-		
+
 		@Override
 		public String toString() {
 			// TODO Auto-generated method stub
 			if (size == 1)
-				return name + " = alloca " + type;
+				return name + " = alloca " + type + "\n";
 			else {
-				return name + " = alloca [" + size + " x " + type + "]";
+				return name + " = alloca [" + size + " x " + type + "]" + "\n";
 			}
 		}
-		
+
+	}
+
+	static public class BrIncond extends Instruction {
+		String label;
+
+		public BrIncond(String label) {
+			this.label = label;
+		}
+
+		@Override
+		public String toString() {
+			return "br label %" + label + "\n";
+		}
+
+	}
+
+	static public class BrCond extends Instruction {
+		String cond;
+		String label1;
+		String label2;
+
+		public BrCond(String place_cond, String l1, String l2) {
+			this.cond = place_cond;
+			this.label1 = l1;
+			this.label2 = l2;
+		}
+
+		@Override
+		public String toString() {
+			return "br i1 " + cond + ", label %" + label1 + ", label %" + label2 + "\n";
+		}
+
 	}
 
 	
+	static public class Label extends Instruction {
+		String name;
+
+		public Label(String name) {
+			this.name = name;
+		}
+
+		@Override
+		public String toString() {
+			return name + ":\n";
+		}
+
+	}
+	
+	static public class Bloc extends Instruction {
+		IR statement;
+
+		public Bloc(IR ir) {
+			this.statement = ir;
+		}
+
+		@Override
+		public String toString() {
+			return statement.toString();
+		}
+
+	}
+
 }

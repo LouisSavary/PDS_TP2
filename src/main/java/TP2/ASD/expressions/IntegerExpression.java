@@ -1,6 +1,7 @@
-package TP2.ASD;
+package TP2.ASD.expressions;
 
 import TP2.Llvm;
+import TP2.ASD.types.Int;
 
 // Concrete class for Expression: constant (integer) case
   public class IntegerExpression extends Expression {

@@ -1,8 +1,8 @@
-package TP2.ASD;
+package TP2.ASD.expressions;
 
 import TP2.Llvm;
-import TP2.TypeException;
 import TP2.Utils;
+import TP2.exceptions.TypeException;
 
 // Concrete class for Expression: add case
   public class DivExpression extends Expression {

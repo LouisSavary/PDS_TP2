@@ -3,7 +3,9 @@ package TP2.ASD;
 import java.util.List;
 
 import TP2.Llvm;
-import TP2.TypeException;
+import TP2.ASD.expressions.Expression;
+import TP2.ASD.instructions.Instruction;
+import TP2.exceptions.TypeException;
 
 public class Program {
 	Expression e; // What a program contains. TODO : change when you extend the language

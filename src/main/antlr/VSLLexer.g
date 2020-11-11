@@ -24,6 +24,8 @@ RP    : ')' ;
 COMA	: ','	;
 LB		: '{'	;
 RB		: '}' 	;
+LC		: '['	;
+RC		: ']' 	;
 PLUS  	: '+'	;
 MINUS	: '-'	;
 TIMES	: '*'	;

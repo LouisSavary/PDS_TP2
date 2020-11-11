@@ -1,19 +1,31 @@
-package TP2.ASD;
+package TP2.ASD.instructions;
 
 import java.util.List;
 
 import TP2.Llvm;
 import TP2.Llvm.IR;
+import TP2.PPIndentation;
 import TP2.SymbolTable;
-import TP2.TypeException;
+import TP2.ASD.types.Type;
+import TP2.SymbolTable.*;
+import TP2.exceptions.TypeException;
 
-public class DeclarationInstr extends Instruction{
+public class DeclarationInstr extends Instruction {
 	List<String> names;
 	Type type;
+	SymbolTable st;
 	
-	public DeclarationInstr(String type, List<String> names) {
+	public DeclarationInstr(String type, List<String> names, SymbolTable st) {
 		this.type = Type.getType(type);
 		this.names = names;
+		this.st	= new SymbolTable(st);
+		for (String name : names) {
+			st.add(new VariableSymbol(this.type, name));
+		}
+	}
+	
+	public SymbolTable getSymbolTable() {
+		return st;
 	}
 	
 	@Override
@@ -28,7 +40,7 @@ public class DeclarationInstr extends Instruction{
 
 	@Override
 	public String pp() {
-		String prettyPrinted = type.pp();
+		String prettyPrinted = PPIndentation.getIndent() + type.pp();
 		for (String name : names) {
 			prettyPrinted += name + ", ";
 		}

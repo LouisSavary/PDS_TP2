@@ -2,7 +2,7 @@ package TP2;
 
 import java.util.Map;
 
-import TP2.ASD.Type;
+import TP2.ASD.types.Type;
 
 import java.util.HashMap;
 import java.util.List;
@@ -17,13 +17,13 @@ import java.util.List;
 public class SymbolTable {
   // Define different symbols
   public static abstract class Symbol {
-    String ident; // minimum, used in the storage map
+    public String 	ident; // minimum, used in the storage map
+    public Type 	type;
   }
 
   public static class VariableSymbol extends Symbol {
-    Type type;
 
-    VariableSymbol(Type type, String ident) {
+    public VariableSymbol(Type type, String ident) {
       this.type = type;
       this.ident = ident;
     }
@@ -39,12 +39,11 @@ public class SymbolTable {
   }
 
   public static class FunctionSymbol extends Symbol {
-    Type returnType;
     List<VariableSymbol> arguments; // arguments is an ordered list of VariableSymbol
     boolean defined; // false if declared but not defined
 
     FunctionSymbol(Type returnType, String ident, List<VariableSymbol> arguments, boolean defined) {
-      this.returnType = returnType;
+      this.type = returnType;
       this.ident = ident;
       this.arguments = arguments;
       this.defined = defined;
@@ -55,7 +54,7 @@ public class SymbolTable {
       if(obj == this) return true;
       if(!(obj instanceof FunctionSymbol)) return false;
       FunctionSymbol o = (FunctionSymbol) obj;
-      return o.returnType.equals(this.returnType) &&
+      return o.type.equals(this.type) &&
         o.ident.equals(this.ident) &&
         o.arguments.equals(this.arguments) &&
         o.defined == this.defined;

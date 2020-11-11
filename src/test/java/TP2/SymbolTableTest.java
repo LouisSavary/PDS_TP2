@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 import org.junit.Test;
 
-import TP2.ASD.Int;
+import TP2.ASD.types.Int;
 import junit.framework.TestCase;
 
 
