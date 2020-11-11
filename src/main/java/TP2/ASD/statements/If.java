@@ -1,9 +1,7 @@
 package TP2.ASD.statements;
 
 import TP2.Llvm;
-import TP2.Llvm.BrCond;
 import TP2.Llvm.IR;
-import TP2.Llvm.Label;
 import TP2.PPIndentation;
 import TP2.SymbolTable;
 import TP2.Utils;

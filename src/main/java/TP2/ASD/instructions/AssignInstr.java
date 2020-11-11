@@ -3,12 +3,10 @@ package TP2.ASD.instructions;
 import TP2.Llvm;
 import TP2.Llvm.IR;
 import TP2.PPIndentation;
-import TP2.exceptions.TypeException;
 import TP2.SymbolTable;
-import TP2.SymbolTable.VariableSymbol;
 import TP2.ASD.expressions.Expression;
 import TP2.ASD.expressions.Expression.RetExpression;
-import TP2.ASD.types.Type;
+import TP2.exceptions.TypeException;
 
 public class AssignInstr extends Instruction {
 

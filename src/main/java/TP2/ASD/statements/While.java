@@ -3,7 +3,6 @@ package TP2.ASD.statements;
 import TP2.PPIndentation;
 import TP2.Utils;
 import TP2.ASD.expressions.Expression.RetExpression;
-import TP2.ASD.types.Type;
 import TP2.Llvm;
 import TP2.Llvm.IR;
 import TP2.exceptions.TypeException;

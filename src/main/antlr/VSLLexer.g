@@ -21,7 +21,7 @@ fragment ASCII  : ~('\n'|'"');
 // keywords
 LP    : '(' ; // Left parenthesis
 RP    : ')' ;
-COMA	: ','	;
+COMMA	: ','	;
 LB		: '{'	;
 RB		: '}' 	;
 LC		: '['	;
@@ -39,7 +39,7 @@ PROTO	: 'PROTO'	;
 //types
 VOID	: 'VOID'	;
 INT		: 'INT' 	;
-
+TYPE 	: INT | VOID;
 
 // TODO : other keywords
 ASSIGN	: ':='	;

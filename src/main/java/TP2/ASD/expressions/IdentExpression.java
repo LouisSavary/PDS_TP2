@@ -6,7 +6,6 @@ import java.util.List;
 import TP2.Llvm;
 import TP2.Llvm.IR;
 import TP2.SymbolTable;
-import TP2.Utils;
 import TP2.exceptions.TypeException;
 
 // Concrete class for Expression: add case
