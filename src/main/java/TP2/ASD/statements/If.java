@@ -7,7 +7,9 @@ import TP2.SymbolTable;
 import TP2.Utils;
 import TP2.ASD.expressions.Expression;
 import TP2.ASD.expressions.Expression.RetExpression;
+import TP2.ASD.types.Int;
 import TP2.exceptions.TypeException;
+import TP2.exceptions.UndeclaredSymbolException;
 
 public class If extends Statement{
 	TP2.ASD.expressions.Expression cond;
@@ -28,23 +30,44 @@ public class If extends Statement{
 	}
 
 	@Override
-	public IR toIR() throws TypeException {
+	public IR toIR() throws TypeException, UndeclaredSymbolException {
 		String then_lab = Utils.newlab("if_then");
-		String else_lab = Utils.newlab("if_else");
 		String end_lab = Utils.newlab("if_end");
-		RetExpression cond_ret = cond.toIR(); 
 		
+		RetExpression cond_ret = cond.toIR();
 		IR ifIR = cond_ret.ir;
-		ifIR.appendCode(new Llvm.BrCond(cond_ret.result, then_lab, else_lab));
+		String place_comp = cond_ret.result;
 		
-		ifIR.appendCode(new Llvm.Label(then_lab));
-		ifIR.appendCode(new Llvm.Bloc(then_stat.toIR()));
-		ifIR.appendCode(new Llvm.BrIncond(end_lab));
-		
-		ifIR.appendCode(new Llvm.Label(else_lab));
-		ifIR.appendCode(new Llvm.Bloc(else_stat.toIR()));
-		ifIR.appendCode(new Llvm.Label(end_lab));
-		return ifIR;
+		if (cond_ret.type.equals(new Int())) {
+			place_comp = Utils.newtmp();
+			ifIR.appendCode(new Llvm.CompareToZero(place_comp, cond_ret.result, cond_ret.type.toLlvmType()));	
+		}
+			
+		if (else_stat != null) {
+			String else_lab = Utils.newlab("if_else");
+			ifIR.appendCode(new Llvm.BrCond(place_comp, then_lab, else_lab));
+			
+			ifIR.appendCode(new Llvm.Label(then_lab));
+			ifIR.appendCode(new Llvm.Bloc(then_stat.toIR()));
+			ifIR.appendCode(new Llvm.BrIncond(end_lab));
+			
+			ifIR.appendCode(new Llvm.Label(else_lab));
+			ifIR.appendCode(new Llvm.Bloc(else_stat.toIR()));
+			ifIR.appendCode(new Llvm.BrIncond(end_lab));
+			
+			ifIR.appendCode(new Llvm.Label(end_lab));
+			return ifIR;
+		} else {
+			
+			ifIR.appendCode(new Llvm.BrCond(place_comp, then_lab, end_lab));
+			
+			ifIR.appendCode(new Llvm.Label(then_lab));
+			ifIR.appendCode(new Llvm.Bloc(then_stat.toIR()));
+			ifIR.appendCode(new Llvm.BrIncond(end_lab));
+			
+			ifIR.appendCode(new Llvm.Label(end_lab));
+			return ifIR;
+		}
 	}
 
 	@Override
@@ -54,7 +77,7 @@ public class If extends Statement{
 				+ PPIndentation.getIndent(1) +"THEN\n" + then_stat.pp() 
 				+ PPIndentation.getIndent(-1) + "ELSE\n";
 		PPIndentation.indent();
-		return pp + then_stat.pp() 
+		return pp + else_stat.pp() 
 				+ PPIndentation.getIndent(-1) + "FI\n";	}
 
 }

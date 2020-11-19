@@ -17,6 +17,10 @@
 8%4 + 9%6
 3
 
-assigned := (6+4)*3
+{INT assigned
+ assigned := (6+4)*3
+ IF 1 THEN assigned := 0 ELSE assigned := 1 FI
+ RETURN assigned
+}
 1
 

@@ -29,7 +29,7 @@ public class Utils {
     return str + lab;
   }
 
-  // generate a new unique global identifier (starting with @tmp) *)
+  // generate a new unique global identifier (starting with str) *)
   public static String newglob(String str) {
     glob++;
     return str + glob;

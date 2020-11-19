@@ -31,18 +31,26 @@ MINUS	: '-'	;
 TIMES	: '*'	;
 DIVID	: '/'	;
 MODUL	: '%'	;
+EQ		: '=='	;
+INF		: '<'	;
+INFEQ	: '<='	;
+SUP		: '>'	;
+SUPEQ	: '>='	;
+OR		: '||'	;
+AND		: '&&'	;
+NO		: '!'	;
 
 
 FUNC	: 'FUNC'	;
 PROTO	: 'PROTO'	;
 
 //types
-VOID	: 'VOID'	;
-INT		: 'INT' 	;
-TYPE 	: INT | VOID;
+TYPE 	: 'INT'
+		| 'VOID'
+		| 'BOOL';
 
 // TODO : other keywords
-ASSIGN	: ':='	;
+ASSIGN	: ':='		;
 WHILE	: 'WHILE' 	;
 DO		: 'DO' 		;
 DONE 	: 'DONE' 	;

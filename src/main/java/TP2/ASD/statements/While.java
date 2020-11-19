@@ -6,6 +6,7 @@ import TP2.ASD.expressions.Expression.RetExpression;
 import TP2.Llvm;
 import TP2.Llvm.IR;
 import TP2.exceptions.TypeException;
+import TP2.exceptions.UndeclaredSymbolException;
 
 public class While extends Statement{
 	TP2.ASD.expressions.Expression expression;
@@ -23,12 +24,12 @@ public class While extends Statement{
 	}
 	
 	@Override
-	public IR toIR() throws TypeException {
+	public IR toIR() throws TypeException, UndeclaredSymbolException {
 		RetExpression expr = expression.toIR();
 			
 		String startlab = Utils.newlab("while_start");
 		String doinglab = Utils.newlab("while_do");
-		String endlab = Utils.newlab("while_end");
+		String endlab 	= Utils.newlab("while_end");
 		
 		IR ir_return = new TP2.Llvm.IR(Llvm.empty(), Llvm.empty());
 		

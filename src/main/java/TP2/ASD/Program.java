@@ -4,6 +4,7 @@ import TP2.Llvm;
 import TP2.ASD.expressions.Expression;
 import TP2.ASD.statements.Statement;
 import TP2.exceptions.TypeException;
+import TP2.exceptions.UndeclaredSymbolException;
 
 public class Program {
 	Expression e; // What a program contains. TODO : change when you extend the language
@@ -28,9 +29,9 @@ public class Program {
     }
 
 	// IR generation
-	public Llvm.IR toIR() throws TypeException {
+	public Llvm.IR toIR() throws TypeException, UndeclaredSymbolException {
 		// TODO : change when you extend the language
-		if (l != null) {
+		if (e == null) {
 			
 			return l.toIR();
 		}

@@ -18,11 +18,13 @@ for file in $(ls $tests_dir | grep ".vsl" )
 do	
 	echo $file
 	file_name=$(echo $file |cut -d'.' -f1)
-	rm "$tests_dir/$file_name"
-	rm "$tests_dir/$file_name.ll"
+	
 	./compile "$tests_dir/$file"
 	cat "$tests_dir/$file" >> $result_file
 	$(sudo "./$tests_dir/$file_name") 
 	echo $? >> $result_file
 	echo "" >> $result_file
+	
+	#rm "$tests_dir/$file_name"
+	#rm "$tests_dir/$file_name.ll"
 done

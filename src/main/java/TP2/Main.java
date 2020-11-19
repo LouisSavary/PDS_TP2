@@ -35,7 +35,7 @@ public class Main {
       Program ast = parser.program().out;
 
       // Pretty-print the program (to debug parsing, if you implemented it!)
-      // System.err.println(ast.pp());
+      System.err.println(ast.pp());
 
       // Compute LLVM IR from the ast
       try {
@@ -43,7 +43,7 @@ public class Main {
 
         // Output LLVM IR
         System.out.println(ir);
-      } catch(TypeException e) {
+      } catch(Exception e) {
         e.printStackTrace(); // Useful for developping, not for the ``end users''!
         System.err.println(e.getMessage());
       }

@@ -40,8 +40,12 @@ public class IdentExpression extends Expression {
 		if (var == null) {
 			throw new TypeException("variable non declarée");
 		}
+
 		
 		IR identIR = new Llvm.IR(Llvm.empty(), Llvm.empty());
+		if (args == null) {
+			return new RetExpression(identIR, var.type, "%" + var.ident);
+		}
 		List<String> arg_places = new ArrayList<String>();
 		//TODO quand on aura implementé les fonctions
 		if (args != null) {
@@ -49,8 +53,8 @@ public class IdentExpression extends Expression {
 				//TODO s'il faut verifier les types des parametres
 				identIR.append(expr.toIR().ir);
 			}
-		}
-		identIR.appendCode(new Llvm.Ident(identName, var.type.toLlvmType(), arg_places));
+		}//ajouter une instruction de call si fonction
+		identIR.appendCode(new Llvm.Ident("%"+identName, var.type.toLlvmType(), arg_places));
 		return new RetExpression(identIR, var.type, var.ident);
 	}
 }

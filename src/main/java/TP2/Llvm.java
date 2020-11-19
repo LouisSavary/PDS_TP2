@@ -1,13 +1,13 @@
 package TP2;
 
 import java.util.List;
-
 import java.util.ArrayList;
 
 // This file contains a simple LLVM IR representation
 // and methods to generate its string representation
 
 public class Llvm {
+
 	static public class IR {
 		List<Instruction> header; // IR instructions to be placed before the code (global definitions)
 		List<Instruction> code; // main code
@@ -52,10 +52,13 @@ public class Llvm {
 			// We create the function main
 			// TODO : remove this when you extend the language
 			r.append("define i32 @main() {\n");
-
-			for (Instruction inst : code)
-				r.append(inst);
-
+			int level = 1;
+			for (Instruction inst : code) {
+				if (inst instanceof Label) 
+					r.append(Utils.indent(0) + inst);
+				else 
+					r.append(Utils.indent(level) + inst);
+			}
 			// TODO : remove this when you extend the language
 			r.append("}\n");
 
@@ -195,8 +198,167 @@ public class Llvm {
 			return "ret " + type + " " + value + "\n";
 		}
 	}
+	
+	static public class No extends Instruction {
+		Type type;
+		String value, result;
 
-	// TODO : other instructions
+		public No(Type type, String value, String result) {
+			this.type = type;
+			this.value = value;
+			this.result = result;
+		}
+
+		public String toString() {
+			return result + " xor " + type + " " + value + ", 1\n";
+		}
+	}
+
+	static public class And extends Instruction {
+		Type type;
+		String left;
+		String right;
+		String lvalue;
+
+		public And(Type type, String left, String right, String lvalue) {
+			this.type = type;
+			this.left = left;
+			this.right = right;
+			this.lvalue = lvalue;
+		}
+
+		public String toString() {
+			return lvalue + " = and " + type + " " + left + ", " + right + "\n";
+		}
+	}
+	
+	static public class Or extends Instruction {
+		Type type;
+		String left;
+		String right;
+		String lvalue;
+
+		public Or(Type type, String left, String right, String lvalue) {
+			this.type = type;
+			this.left = left;
+			this.right = right;
+			this.lvalue = lvalue;
+		}
+
+		public String toString() {
+			return lvalue + " = or " + type + " " + left + ", " + right + "\n";
+		}
+	}
+	
+	static public class Eq extends Instruction {
+		Type type;
+		String left;
+		String right;
+		String lvalue;
+
+		public Eq(Type type, String left, String right, String lvalue) {
+			this.type = type;
+			this.left = left;
+			this.right = right;
+			this.lvalue = lvalue;
+		}
+
+		public String toString() {
+			return lvalue + " = eq " + type + " " + left + ", " + right + "\n";
+		}
+	}
+	
+	static public class Inf extends Instruction {
+		Type type;
+		String left;
+		String right;
+		String lvalue;
+
+		public Inf(Type type, String left, String right, String lvalue) {
+			this.type = type;
+			this.left = left;
+			this.right = right;
+			this.lvalue = lvalue;
+		}
+
+		public String toString() {
+			return lvalue + " = slt " + type + " " + left + ", " + right + "\n";
+		}
+	}
+	
+	static public class InfEq extends Instruction {
+		Type type;
+		String left;
+		String right;
+		String lvalue;
+
+		public InfEq(Type type, String left, String right, String lvalue) {
+			this.type = type;
+			this.left = left;
+			this.right = right;
+			this.lvalue = lvalue;
+		}
+
+		public String toString() {
+			return lvalue + " = sle " + type + " " + left + ", " + right + "\n";
+		}
+	}
+	
+	static public class Sup extends Instruction {
+		Type type;
+		String left;
+		String right;
+		String lvalue;
+
+		public Sup(Type type, String left, String right, String lvalue) {
+			this.type = type;
+			this.left = left;
+			this.right = right;
+			this.lvalue = lvalue;
+		}
+
+		public String toString() {
+			return lvalue + " = sgt " + type + " " + left + ", " + right + "\n";
+		}
+	}
+	
+	static public class SupEq extends Instruction {
+		Type type;
+		String left;
+		String right;
+		String lvalue;
+
+		public SupEq(Type type, String left, String right, String lvalue) {
+			this.type = type;
+			this.left = left;
+			this.right = right;
+			this.lvalue = lvalue;
+		}
+
+		public String toString() {
+			return lvalue + " = sge " + type + " " + left + ", " + right + "\n";
+		}
+	}
+	
+	static public class CompareToZero extends Instruction {
+		String comparison, compared;
+		Type type;
+		
+		public CompareToZero(String place_comp, String operand, Type type) {
+			comparison = place_comp;
+			compared = operand;
+			this.type = type;
+		}
+
+		@Override
+		public String toString() {
+			return comparison + " = icmp ne " + type.toString() + ' ' + compared + ", 0\n" ;
+		}
+
+	}
+
+
+	
 	static public class Assign extends Instruction {
 		String var_name;
 		Type type;
@@ -229,7 +391,7 @@ public class Llvm {
 			if (args == null)
 				return "";
 			//TODO les fonx
-			return type + " %" + var_name;
+			return type + " %" + var_name + "\n";
 		}
 	}
 
@@ -249,6 +411,7 @@ public class Llvm {
 			// TODO Auto-generated method stub
 			if (size == 1)
 				return name + " = alloca " + type + "\n";
+				//return name + " = alloca " + type + "\n";
 			else {
 				return name + " = alloca [" + size + " x " + type + "]" + "\n";
 			}
@@ -312,7 +475,13 @@ public class Llvm {
 
 		@Override
 		public String toString() {
-			return statement.toString();
+			StringBuilder r = new StringBuilder();
+			for (Instruction inst : statement.header)
+				r.append(inst);
+			for (Instruction inst : statement.code)
+					r.append(inst);
+
+			return r.toString();
 		}
 
 	}

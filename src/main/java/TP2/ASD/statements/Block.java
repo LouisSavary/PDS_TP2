@@ -6,6 +6,7 @@ import TP2.Llvm;
 import TP2.PPIndentation;
 import TP2.Llvm.IR;
 import TP2.exceptions.TypeException;
+import TP2.exceptions.UndeclaredSymbolException;
 
 public class Block extends Statement{
 	List<TP2.ASD.statements.Statement> l;
@@ -15,7 +16,7 @@ public class Block extends Statement{
 	}
 	
 	@Override
-	public IR toIR() throws TypeException {
+	public IR toIR() throws TypeException, UndeclaredSymbolException {
 		IR blockir = new Llvm.IR(Llvm.empty(), Llvm.empty());
 		for(Statement s : l)
 			blockir.append(s.toIR());
