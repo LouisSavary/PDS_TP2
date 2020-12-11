@@ -21,9 +21,13 @@ do
 	
 	./compile "$tests_dir/$file"
 	cat "$tests_dir/$file" >> $result_file
-	$(sudo "./$tests_dir/$file_name") 
+	sudo $tests_dir/$file_name 
 	echo $? >> $result_file
 	echo "" >> $result_file
+	
+	echo ""
+	echo "________________________________________________"
+	echo ""
 	
 	#rm "$tests_dir/$file_name"
 	#rm "$tests_dir/$file_name.ll"

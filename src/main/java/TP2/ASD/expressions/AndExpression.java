@@ -4,6 +4,7 @@ import TP2.Llvm;
 import TP2.Utils;
 import TP2.ASD.types.Bool;
 import TP2.exceptions.TypeException;
+import TP2.exceptions.UndeclaredSymbolException;
 
 // Concrete class for Expression: add case
   public class AndExpression extends Expression {
@@ -21,7 +22,7 @@ import TP2.exceptions.TypeException;
     }
 
     // IR generation
-    public RetExpression toIR() throws TypeException {
+    public RetExpression toIR() throws TypeException, UndeclaredSymbolException {
       RetExpression leftRet = left.toIR();
       RetExpression rightRet = right.toIR();
 

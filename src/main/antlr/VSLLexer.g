@@ -59,7 +59,8 @@ THEN	: 'THEN' 	;
 ELSE 	: 'ELSE' 	;
 FI		: 'FI' 		;
 RETURN	: 'RETURN'	;
-CALL	: 'CALL'	;
+PRINT	: 'PRINT'	;
+READ	: 'READ'	;
 // other tokens (no conflict with keywords in VSL)
 IDENT   : LETTER (LETTER|DIGIT)*;
 TEXT    : '"' (ASCII)* '"' { setText(getText().substring(1, getText().length() - 1)); };

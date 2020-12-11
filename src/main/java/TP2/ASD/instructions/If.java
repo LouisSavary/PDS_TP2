@@ -1,32 +1,32 @@
-package TP2.ASD.statements;
+package TP2.ASD.instructions;
 
 import TP2.Llvm;
 import TP2.Llvm.IR;
+import TP2.exceptions.TypeException;
+import TP2.exceptions.UndeclaredSymbolException;
 import TP2.PPIndentation;
 import TP2.SymbolTable;
 import TP2.Utils;
 import TP2.ASD.expressions.Expression;
 import TP2.ASD.expressions.Expression.RetExpression;
 import TP2.ASD.types.Int;
-import TP2.exceptions.TypeException;
-import TP2.exceptions.UndeclaredSymbolException;
 
-public class If extends Statement{
+public class If extends Instruction{
 	TP2.ASD.expressions.Expression cond;
-	TP2.ASD.statements.Statement then_stat, else_stat;
+	TP2.ASD.instructions.Instruction then_stat, else_stat;
 	TP2.SymbolTable st;
 	
 	
 	
 	public If(Expression cond, 
-			Statement then_stat, 
-			Statement else_stat, 
+			Instruction then_stat, 
+			Instruction else_stat, 
 			SymbolTable st) {
 		super();
 		this.cond = cond;
 		this.then_stat = then_stat;
 		this.else_stat = else_stat;
-		this.st = st;
+		this.st = new TP2.SymbolTable(st);
 	}
 
 	@Override
@@ -72,12 +72,14 @@ public class If extends Statement{
 
 	@Override
 	public String pp() {
-		// TODO Auto-generated method stub
 		String pp = PPIndentation.getIndent() + "IF " + cond.pp() + "\n" 
-				+ PPIndentation.getIndent(1) +"THEN\n" + then_stat.pp() 
-				+ PPIndentation.getIndent(-1) + "ELSE\n";
-		PPIndentation.indent();
-		return pp + else_stat.pp() 
-				+ PPIndentation.getIndent(-1) + "FI\n";	}
+				+ PPIndentation.getIndent(1) +"THEN {\n" + then_stat.pp(); 
+		if (else_stat != null) {
+			pp += PPIndentation.getIndent(-1) + "ELSE\n";
+			PPIndentation.indent();
+			pp += else_stat.pp() ;
+		}
+		return pp + PPIndentation.getIndent(-1) + "FI\n";	
+	}
 
 }

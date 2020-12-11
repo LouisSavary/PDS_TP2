@@ -1,24 +1,24 @@
-package TP2.ASD.statements;
+package TP2.ASD.instructions;
 
 import java.util.List;
 
 import TP2.Llvm;
-import TP2.PPIndentation;
 import TP2.Llvm.IR;
+import TP2.PPIndentation;
 import TP2.exceptions.TypeException;
 import TP2.exceptions.UndeclaredSymbolException;
 
-public class Block extends Statement{
-	List<TP2.ASD.statements.Statement> l;
+public class Block extends Instruction{
+	List<TP2.ASD.instructions.Instruction> l;
 	
-	public Block (List<TP2.ASD.statements.Statement> l) {
+	public Block (List<TP2.ASD.instructions.Instruction> l) {
 		this.l = l;
 	}
 	
 	@Override
 	public IR toIR() throws TypeException, UndeclaredSymbolException {
 		IR blockir = new Llvm.IR(Llvm.empty(), Llvm.empty());
-		for(Statement s : l)
+		for(Instruction s : l)
 			blockir.append(s.toIR());
 		return blockir;
 	}
@@ -28,7 +28,7 @@ public class Block extends Statement{
 		
 		String blockir = PPIndentation.getIndent(-1) + "{\n";
 		PPIndentation.indent();
-		for(Statement s : l)
+		for(Instruction s : l)
 			blockir+=(s.pp());
 		blockir +=PPIndentation.getIndent(-1) + "}\n";
 		PPIndentation.indent();

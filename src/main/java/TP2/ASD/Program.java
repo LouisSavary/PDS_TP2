@@ -1,5 +1,7 @@
 package TP2.ASD;
 
+import java.util.List;
+
 import TP2.Llvm;
 import TP2.ASD.expressions.Expression;
 import TP2.ASD.statements.Statement;
@@ -8,13 +10,13 @@ import TP2.exceptions.UndeclaredSymbolException;
 
 public class Program {
 	Expression e; // What a program contains. TODO : change when you extend the language
-	Statement l;
+	List<Statement> l;
 
 	public Program(Expression e) {
 		this.e = e;
 	}
 
-	public Program(Statement l) {
+	public Program(List<Statement> l) {
 		this.l = l;
 	}
 
@@ -23,7 +25,10 @@ public class Program {
     	if (e != null)
     		return e.pp();
     	else {
-    		return l.pp();
+    		StringBuilder s = new StringBuilder();
+    		for (Statement st : l)
+    			s.append(st.pp());
+    		return s.toString();
     	}
     		
     }
@@ -32,8 +37,9 @@ public class Program {
 	public Llvm.IR toIR() throws TypeException, UndeclaredSymbolException {
 		// TODO : change when you extend the language
 		if (e == null) {
-			
-			return l.toIR();
+			Llvm.IR ir = new Llvm.IR(Llvm.empty(), Llvm.empty());
+			for (Statement s : l) ir.append(s.toIR());
+			return ir;
 		}
 		// computes the IR of the expression
 		Expression.RetExpression retExpr = e.toIR();

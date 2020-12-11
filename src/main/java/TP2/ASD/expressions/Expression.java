@@ -3,10 +3,11 @@ package TP2.ASD.expressions;
 import TP2.Llvm;
 import TP2.ASD.types.Type;
 import TP2.exceptions.TypeException;
+import TP2.exceptions.UndeclaredSymbolException;
 
 public abstract class Expression {
     public abstract String pp();
-    public abstract Expression.RetExpression toIR() throws TypeException;
+    public abstract Expression.RetExpression toIR() throws TypeException, UndeclaredSymbolException;
 
     // Object returned by toIR on expressions, with IR + synthesized attributes
     static public class RetExpression {

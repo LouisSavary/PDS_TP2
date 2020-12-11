@@ -3,6 +3,7 @@ package TP2.ASD.expressions;
 import TP2.Llvm;
 import TP2.Utils;
 import TP2.exceptions.TypeException;
+import TP2.exceptions.UndeclaredSymbolException;
 
 public class MulExpression extends Expression {
 	private Expression left, right;
@@ -19,7 +20,7 @@ public class MulExpression extends Expression {
 	}
 
 	@Override
-	public RetExpression toIR() throws TypeException {
+	public RetExpression toIR() throws TypeException, UndeclaredSymbolException {
 		RetExpression leftRet = left.toIR();
 		RetExpression rightRet = right.toIR();
 

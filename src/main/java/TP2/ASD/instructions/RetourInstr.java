@@ -1,7 +1,7 @@
 package TP2.ASD.instructions;
 
 import TP2.Llvm;
-import TP2.Llvm.IR;
+import TP2.PPIndentation;
 import TP2.ASD.expressions.Expression;
 import TP2.ASD.expressions.Expression.RetExpression;
 import TP2.exceptions.TypeException;
@@ -18,9 +18,9 @@ public class RetourInstr extends Instruction {
 	
 	
 	@Override
-	public IR toIR() throws TypeException, UndeclaredSymbolException{
-		
+	public Llvm.IR toIR() throws TypeException, UndeclaredSymbolException{
 		RetExpression exprRet = expr.toIR();
+		
 		Llvm.Instruction assignement = new Llvm.Return(exprRet.type.toLlvmType(), exprRet.result);
 		exprRet.ir.appendCode(assignement);		
 		return exprRet.ir;
@@ -28,7 +28,7 @@ public class RetourInstr extends Instruction {
 
 	@Override
 	public String pp() {
-		return "RETURN " + expr.pp() + "\n";
+		return PPIndentation.getIndent() + "RETURN " + expr.pp() + "\n";
 	}
 
 }

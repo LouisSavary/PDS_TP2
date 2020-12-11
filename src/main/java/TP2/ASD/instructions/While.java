@@ -1,26 +1,26 @@
-package TP2.ASD.statements;
+package TP2.ASD.instructions;
 
-import TP2.PPIndentation;
-import TP2.Utils;
-import TP2.ASD.expressions.Expression.RetExpression;
 import TP2.Llvm;
 import TP2.Llvm.IR;
 import TP2.exceptions.TypeException;
 import TP2.exceptions.UndeclaredSymbolException;
+import TP2.PPIndentation;
+import TP2.Utils;
+import TP2.ASD.expressions.Expression.RetExpression;
 
-public class While extends Statement{
+public class While extends Instruction{
 	TP2.ASD.expressions.Expression expression;
-	TP2.ASD.statements.Statement statement;
+	TP2.ASD.instructions.Instruction statement;
 	TP2.SymbolTable symboltable;
 	
 	
 	public While (
 			TP2.ASD.expressions.Expression expr,
-			TP2.ASD.statements.Statement stat,
+			TP2.ASD.instructions.Instruction stat,
 			TP2.SymbolTable st) {
 		expression = expr;
 		statement = stat;
-		symboltable = st;
+		symboltable = new TP2.SymbolTable(st);
 	}
 	
 	@Override
@@ -48,7 +48,6 @@ public class While extends Statement{
 
 	@Override
 	public String pp() {
-		// TODO Auto-generated method stub
 		return PPIndentation.getIndent() + "WHILE " + expression.pp() + "\n" 
 				+ PPIndentation.getIndent(1) +"DO\n" + statement.pp() 
 				+ PPIndentation.getIndent(-1) + "DONE\n";

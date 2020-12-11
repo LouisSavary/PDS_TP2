@@ -1,7 +1,7 @@
 package TP2;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 // This file contains a simple LLVM IR representation
 // and methods to generate its string representation
@@ -40,28 +40,23 @@ public class Llvm {
 		public String toString() {
 			// This header describe to LLVM the target
 			// and declare the external function printf
-			StringBuilder r = new StringBuilder("; Target\n" + "target triple = \"x86_64-unknown-linux-gnu\"\n"
+			StringBuilder r = new StringBuilder(""
+					+"; Target\n" + "target triple = \"x86_64-unknown-linux-gnu\"\n"
 					+ "; External declaration of the printf function\n"
-					+ "declare i32 @printf(i8* noalias nocapture, ...)\n" + "\n; Actual code begins\n\n");
+					+ "declare i32 @printf(i8* noalias nocapture, ...)\n"
+					+ "declare i32 @scanf(i8* noalias nocapture, ...)\n"
+					+ "\n; Actual code begins\n\n");
 
 			for (Instruction inst : header)
-				r.append(inst);
+				r.append(inst.toString());
 
 			r.append("\n\n");
 
-			// We create the function main
-			// TODO : remove this when you extend the language
-			r.append("define i32 @main() {\n");
-			int level = 1;
 			for (Instruction inst : code) {
-				if (inst instanceof Label) 
-					r.append(Utils.indent(0) + inst);
-				else 
-					r.append(Utils.indent(level) + inst);
+					r.append(inst.toString());
 			}
-			// TODO : remove this when you extend the language
-			r.append("}\n");
-
+			
+			
 			return r.toString();
 		}
 	}
@@ -87,14 +82,77 @@ public class Llvm {
 			return "i1";
 		}
 	}
+	
+	static public class Void extends Type {
+		public String toString() {
+			return "void";
+		}
+	}
 
-	// TODO : other types
-
+	static public class IntArray extends Type {
+		public String toString() {
+			return "";
+		}
+	}
+	
 	// LLVM IR Instructions
 	static public abstract class Instruction {
 		public abstract String toString();
 	}
 
+	static public class Print extends Instruction {
+		String toPrint;
+		public Print(String p) {
+			this.toPrint = p;
+		}
+		
+		public String toString() {
+			return "call i32 (i8* , ...) @printf(" + toPrint + ")\n";
+		}
+	}
+	
+	static public class Read extends Instruction {
+		String toRead;
+		public Read(String r) {
+			this.toRead = r;
+		}
+		
+		public String toString() {
+			
+			return "call i32 (i8* , ...) @scanf(" + toRead + ")\n";
+		}
+	}
+	
+	static public class Return extends Instruction {
+		Type type;
+		String value;
+
+		public Return(Type type, String value) {
+			this.type = type;
+			this.value = value;
+		}
+
+		public String toString() {
+			return "ret " + type + " " + value + "\n";
+		}
+	}
+
+	static public class GlobalString extends Instruction {
+		String name;
+		String value;
+		int size;
+
+		public GlobalString(String name, String value, int size) {
+			this.name = name;
+			this.value = value;
+			this.size = size;
+		}
+
+		public String toString() {
+			return name + " = global [ " + size + " x i8 ] c\"" + value + "\"\n";
+		}
+	}
+	
 	static public class Add extends Instruction {
 		Type type;
 		String left;
@@ -185,20 +243,6 @@ public class Llvm {
 		}
 	}
 
-	static public class Return extends Instruction {
-		Type type;
-		String value;
-
-		public Return(Type type, String value) {
-			this.type = type;
-			this.value = value;
-		}
-
-		public String toString() {
-			return "ret " + type + " " + value + "\n";
-		}
-	}
-	
 	static public class No extends Instruction {
 		Type type;
 		String value, result;
@@ -231,7 +275,7 @@ public class Llvm {
 			return lvalue + " = and " + type + " " + left + ", " + right + "\n";
 		}
 	}
-	
+
 	static public class Or extends Instruction {
 		Type type;
 		String left;
@@ -249,7 +293,7 @@ public class Llvm {
 			return lvalue + " = or " + type + " " + left + ", " + right + "\n";
 		}
 	}
-	
+
 	static public class Eq extends Instruction {
 		Type type;
 		String left;
@@ -267,7 +311,7 @@ public class Llvm {
 			return lvalue + " = eq " + type + " " + left + ", " + right + "\n";
 		}
 	}
-	
+
 	static public class Inf extends Instruction {
 		Type type;
 		String left;
@@ -285,7 +329,7 @@ public class Llvm {
 			return lvalue + " = slt " + type + " " + left + ", " + right + "\n";
 		}
 	}
-	
+
 	static public class InfEq extends Instruction {
 		Type type;
 		String left;
@@ -303,7 +347,7 @@ public class Llvm {
 			return lvalue + " = sle " + type + " " + left + ", " + right + "\n";
 		}
 	}
-	
+
 	static public class Sup extends Instruction {
 		Type type;
 		String left;
@@ -321,7 +365,7 @@ public class Llvm {
 			return lvalue + " = sgt " + type + " " + left + ", " + right + "\n";
 		}
 	}
-	
+
 	static public class SupEq extends Instruction {
 		Type type;
 		String left;
@@ -339,11 +383,11 @@ public class Llvm {
 			return lvalue + " = sge " + type + " " + left + ", " + right + "\n";
 		}
 	}
-	
+
 	static public class CompareToZero extends Instruction {
 		String comparison, compared;
 		Type type;
-		
+
 		public CompareToZero(String place_comp, String operand, Type type) {
 			comparison = place_comp;
 			compared = operand;
@@ -352,19 +396,34 @@ public class Llvm {
 
 		@Override
 		public String toString() {
-			return comparison + " = icmp ne " + type.toString() + ' ' + compared + ", 0\n" ;
+			return comparison + " = icmp ne " + type.toString() + ' ' + compared + ", 0\n";
 		}
 
 	}
 
-
-	
-	static public class Assign extends Instruction {
+	static public class Load extends Instruction {
 		String var_name;
 		Type type;
+		String place;
+
+		public Load(Type type, String var_name, String place) {
+			this.var_name = var_name;
+			this.type = type;
+			this.place = place;
+		}
+
+		public String toString() {
+			// %tmp = load i32, i32* var_name
+			return place + " = load " + type + ", " + type + "* " + var_name + "\n";
+		}
+	}
+
+	static public class Assign extends Instruction {
+		String var_name;
+		String type;
 		String value;
 
-		public Assign(String var_name, Type type, String expr) {
+		public Assign(String var_name, String type, String expr) {
 			this.var_name = var_name;
 			this.type = type;
 			this.value = expr;
@@ -378,29 +437,44 @@ public class Llvm {
 
 	static public class Ident extends Instruction {
 		String var_name;
-		Type type;
+		String type;
 		List<String> args;
+		String place;
 
-		public Ident(String var_name, Type type, List<String> args) {
+		public Ident(String var_name, String type, List<String> args, String place) {
 			this.var_name = var_name;
 			this.type = type;
 			this.args = args;
+			this.place = place;
 		}
 
 		public String toString() {
-			if (args == null)
-				return "";
-			//TODO les fonx
-			return type + " %" + var_name + "\n";
+			String affectat = "";
+			if (place != null) {
+				affectat = place + " = ";
+			}
+			
+			String arguments = "(";
+			int i = 0;
+			if (args != null)
+				for (String arg : args)
+					if (i++ == 0)
+						arguments += arg;
+					else
+						arguments += ", " + arg;
+				
+			arguments += ")";
+
+			return affectat + " call " + type + " " + var_name + arguments + "\n";
 		}
 	}
 
 	static public class Declare extends Instruction {
-		Type type;
+		String type;
 		String name;
 		int size;
 
-		public Declare(Type type, String name, int size) {
+		public Declare(String type, String name, int size) {
 			this.name = name;
 			this.type = type;
 			this.size = size;
@@ -408,10 +482,9 @@ public class Llvm {
 
 		@Override
 		public String toString() {
-			// TODO Auto-generated method stub
 			if (size == 1)
 				return name + " = alloca " + type + "\n";
-				//return name + " = alloca " + type + "\n";
+			// return name + " = alloca " + type + "\n";
 			else {
 				return name + " = alloca [" + size + " x " + type + "]" + "\n";
 			}
@@ -451,7 +524,6 @@ public class Llvm {
 
 	}
 
-	
 	static public class Label extends Instruction {
 		String name;
 
@@ -465,22 +537,58 @@ public class Llvm {
 		}
 
 	}
-	
+
 	static public class Bloc extends Instruction {
-		IR statement;
+		IR instructions;
 
 		public Bloc(IR ir) {
-			this.statement = ir;
+			this.instructions = ir;
 		}
 
 		@Override
 		public String toString() {
 			StringBuilder r = new StringBuilder();
-			for (Instruction inst : statement.header)
+			for (Instruction inst : instructions.header)
 				r.append(inst);
-			for (Instruction inst : statement.code)
-					r.append(inst);
+			for (Instruction inst : instructions.code)
+				r.append(inst);
 
+			return r.toString();
+		}
+
+	}
+
+	static public class Func extends Instruction {
+		Type type;
+		String name;
+		String args;
+		IR code;
+
+		public Func(Type t, String n, String a, IR c) {
+			this.type = t;
+			this.name = n;
+			this.args = a;
+			this.code = c;
+		}
+
+		@Override
+		public String toString() {
+			// construction de la chaine "define %i32 name(args) {"
+			StringBuilder r = new StringBuilder();
+			for (Instruction inst : code.header)
+				r.append(inst);
+			
+			
+			r.append("define " + type.toString() + " " + name + "(" + args + ") {\n");
+
+			
+			for (Instruction inst : code.code)
+				if (inst instanceof Label)
+					r.append(inst);
+				else 
+					r.append(Utils.indent(1) + inst);
+			
+			r.append("}\n");
 			return r.toString();
 		}
 

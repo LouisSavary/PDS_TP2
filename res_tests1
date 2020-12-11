@@ -1,0 +1,58 @@
+
+FUNC INT main() {
+            PRINT "Hello World"
+	}
+
+0
+
+FUNC INT main() { RETURN 0 }
+
+0
+
+FUNC VOID main() {
+	PRINT 5,"+",7," = ", 5+7 ,"\n"
+	PRINT 5,"-",7," = ", 5-7 ,"\n"
+	PRINT 5,"*",7," = ", 5*7 ,"\n"
+	PRINT 5,"/",7," = ", 5/7 ,"\n"
+	PRINT 5,"+",1," = ", 5+1 ,"\n"
+	PRINT 5,"* (",5,"+",7,") = ", 5*(5+7) ,"\n"
+	PRINT 5,"*  ",5,"+",7,"  = ", 5 * 5 + 7  ,"\n"
+	}
+
+14
+
+FUNC INT main() RETURN 1
+1
+
+FUNC INT main() IF 1 THEN RETURN 1 FI
+
+1
+
+FUNC INT main() IF 1 THEN RETURN 1 ELSE RETURN 0 FI
+
+1
+
+FUNC VOID main() PRINT "Hello"
+48
+
+FUNC VOID main() PRINT 1
+
+48
+
+FUNC VOID main() PRINT "1 = ", 1
+
+48
+
+PROTO INT main()
+FUNC INT main() RETURN 1
+1
+
+FUNC VOID main() { PRINT "toto" PRINT "titi" }
+
+
+48
+
+FUNC INT main() WHILE 1 DO RETURN 0 DONE
+
+0
+

@@ -2,7 +2,6 @@ package TP2.ASD.types;
 
 import TP2.Llvm;
 
-// Warning: this is the type from VSL+, not the LLVM types!
   public abstract class Type {
     public abstract String pp();
     public abstract Llvm.Type toLlvmType();
@@ -10,7 +9,11 @@ import TP2.Llvm;
     	
     	if (type_name.equals(new Int().pp()))
     		return new Int();
-    	else 
-    		return null;
+    	else if (type_name.equals(new Bool().pp()))
+			return new Bool();
+		else if (type_name.equals(new Void().pp()))
+    		return new Void();
+		else 
+			return null;
     }
   }

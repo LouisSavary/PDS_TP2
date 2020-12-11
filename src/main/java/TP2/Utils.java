@@ -32,7 +32,7 @@ public class Utils {
   // generate a new unique global identifier (starting with str) *)
   public static String newglob(String str) {
     glob++;
-    return str + glob;
+    return '@' + str + glob;
   }
 
   // transform escaped newlines ('\' 'n') into newline form suitable for LLVM

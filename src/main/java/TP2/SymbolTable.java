@@ -39,10 +39,10 @@ public class SymbolTable {
   }
 
   public static class FunctionSymbol extends Symbol {
-    List<VariableSymbol> arguments; // arguments is an ordered list of VariableSymbol
+    public List<VariableSymbol> arguments; // arguments is an ordered list of VariableSymbol
     boolean defined; // false if declared but not defined
 
-    FunctionSymbol(Type returnType, String ident, List<VariableSymbol> arguments, boolean defined) {
+    public FunctionSymbol(Type returnType, String ident, List<VariableSymbol> arguments, boolean defined) {
       this.type = returnType;
       this.ident = ident;
       this.arguments = arguments;
@@ -59,6 +59,7 @@ public class SymbolTable {
         o.arguments.equals(this.arguments) &&
         o.defined == this.defined;
     }
+    
   }
 
   // Store the table as a map
