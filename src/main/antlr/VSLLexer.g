@@ -49,7 +49,7 @@ TYPE 	: 'INT'
 		| 'VOID'
 		| 'BOOL';
 
-// TODO : other keywords
+//other keywords
 ASSIGN	: ':='		;
 WHILE	: 'WHILE' 	;
 DO		: 'DO' 		;

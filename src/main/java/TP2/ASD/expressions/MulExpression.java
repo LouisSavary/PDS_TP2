@@ -15,7 +15,6 @@ public class MulExpression extends Expression {
 
 	@Override
 	public String pp() {
-		// TODO Auto-generated method stub
 		return '(' + left.pp() + " * " + right.pp() + ')';
 	}
 

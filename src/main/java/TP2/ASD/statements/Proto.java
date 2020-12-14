@@ -1,5 +1,6 @@
 package TP2.ASD.statements;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import TP2.Llvm.IR;
@@ -8,6 +9,7 @@ import TP2.PPIndentation;
 import TP2.SymbolTable;
 import TP2.SymbolTable.FunctionSymbol;
 import TP2.SymbolTable.VariableSymbol;
+import TP2.ASD.types.IntArray;
 import TP2.ASD.types.Type;
 import TP2.exceptions.TypeException;
 import TP2.exceptions.UndeclaredSymbolException;
@@ -16,13 +18,21 @@ public class Proto extends Statement {
 	String name;
 	Type type;
 	List<VariableSymbol> args;
+	List<String> args_names_pp;
 	SymbolTable st;
 	
-	public Proto(String type, String name, List<VariableSymbol> args, SymbolTable st) {
+	public Proto(String type, String name, List<VariableSymbol> args, SymbolTable st, List<String> arg_names) {
 		this.name = name;
 		this.type = Type.getType(type);
 		this.args = args;
 		this.st   = st;
+		
+		this.args_names_pp = new ArrayList<>();
+		for (int i = 0; i < arg_names.size(); i++)
+			this.args_names_pp.add(arg_names.get(i) 
+					+(args.get(i).type.equals(new IntArray())?"[]":""));
+		
+		
 		st.add(new FunctionSymbol(this.type, name, args, false));
 	}
 	

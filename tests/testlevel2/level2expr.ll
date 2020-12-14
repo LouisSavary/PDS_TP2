@@ -6,13 +6,6 @@ declare i32 @scanf(i8* noalias nocapture, ...)
 
 ; Actual code begins
 
-
-
-define void @main() {
-   call void (i32,i32)  @expr(i32 1, i32 3)
-   call void (i32,i32)  @expr(i32 5, i32 2)
-  ret void 
-}
 @.fmt1 = global [ 12 x i8 ] c"%d+%d = %d\0A\00"
 @.fmt2 = global [ 12 x i8 ] c"%d-%d = %d\0A\00"
 @.fmt3 = global [ 12 x i8 ] c"%d*%d = %d\0A\00"
@@ -20,6 +13,13 @@ define void @main() {
 @.fmt5 = global [ 12 x i8 ] c"%d+%d = %d\0A\00"
 @.fmt6 = global [ 18 x i8 ] c"%d* (%d+%d) = %d\0A\00"
 @.fmt7 = global [ 18 x i8 ] c"%d*  %d+%d  = %d\0A\00"
+
+
+define void @main() {
+  call void @expr(i32 1, i32 3)
+  call void @expr(i32 5, i32 2)
+  ret void 
+}
 define void @expr(i32 %x1, i32 %y1) {
   %x = alloca i32
   store i32 %x1, i32* %x

@@ -6,11 +6,11 @@ declare i32 @scanf(i8* noalias nocapture, ...)
 
 ; Actual code begins
 
-
-
 @.fmt1 = global [ 9 x i8 ] c"1+3 = %d\00"
+
+
 define void @main() {
-  %tmp1 =  call i32 @plus(i32 1, i32 3)
+  %tmp1 = call i32 @plus(i32 1, i32 3)
   call i32 (i8* , ...) @printf(i8* getelementptr inbounds ([9 x i8], [9 x i8]* @.fmt1, i64 0, i64 0), i32 %tmp1)
   ret void 
 }

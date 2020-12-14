@@ -48,11 +48,11 @@ public class If extends Instruction{
 			ifIR.appendCode(new Llvm.BrCond(place_comp, then_lab, else_lab));
 			
 			ifIR.appendCode(new Llvm.Label(then_lab));
-			ifIR.appendCode(new Llvm.Bloc(then_stat.toIR()));
+			ifIR.append(then_stat.toIR());
 			ifIR.appendCode(new Llvm.BrIncond(end_lab));
 			
 			ifIR.appendCode(new Llvm.Label(else_lab));
-			ifIR.appendCode(new Llvm.Bloc(else_stat.toIR()));
+			ifIR.append(else_stat.toIR());
 			ifIR.appendCode(new Llvm.BrIncond(end_lab));
 			
 			ifIR.appendCode(new Llvm.Label(end_lab));
@@ -62,7 +62,7 @@ public class If extends Instruction{
 			ifIR.appendCode(new Llvm.BrCond(place_comp, then_lab, end_lab));
 			
 			ifIR.appendCode(new Llvm.Label(then_lab));
-			ifIR.appendCode(new Llvm.Bloc(then_stat.toIR()));
+			ifIR.append(then_stat.toIR());
 			ifIR.appendCode(new Llvm.BrIncond(end_lab));
 			
 			ifIR.appendCode(new Llvm.Label(end_lab));
@@ -73,7 +73,7 @@ public class If extends Instruction{
 	@Override
 	public String pp() {
 		String pp = PPIndentation.getIndent() + "IF " + cond.pp() + "\n" 
-				+ PPIndentation.getIndent(1) +"THEN {\n" + then_stat.pp(); 
+				+ PPIndentation.getIndent(1) +"THEN\n" + then_stat.pp(); 
 		if (else_stat != null) {
 			pp += PPIndentation.getIndent(-1) + "ELSE\n";
 			PPIndentation.indent();

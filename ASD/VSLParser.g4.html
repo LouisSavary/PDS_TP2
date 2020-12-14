@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>VSLParser.g4</title>
+<style type="text/css">
+body { 
+  color: #000;
+  font-family: sans-serif;
+  font-size: 12px;
+  margin: 20px 5px 10px 20px;
+}
+/* resets */
+ul {
+  list-style: none;
+  padding: 0;
+}
+a {
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+img {
+  border: 0;
+}
+.clear {
+  clear: both;
+}
+.container {
+  position: relative;
+}
+/* Grammar name */
+h1 {
+  font-size: 20px;
+}
+/*Grammar documentation*/
+.gdoc {
+  margin-left: 20px;
+  margin-bottom: 20px;
+}
+#index {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 200px;
+  overflow: auto;
+}
+#index h2 {
+  margin: 0;
+}
+#index ol {
+  padding-left: 30px;
+  list-style-type: square;
+  color: #364559;
+}
+#index ol li {
+  margin: 2px 0;
+}
+#index ol li a {
+  color: #366199;
+  font-family: monospace;
+}
+#rules {
+  margin-left: 210px;
+  padding-left: 20px;
+  border-left: 1px solid #AAA;
+}
+.rule {
+  margin-bottom: 30px;
+}
+/* Rule name*/
+.rule h3 {
+  color: #364559;
+  background-color: #DADFE6;
+  font-size: 16px;
+  font-weight: bold;
+  padding: 4px 5px;
+  border-bottom: 1px solid #828B99;
+}
+.rule h3 a.topLink {
+  font-family: sans-serif;
+  font-size: 10px;
+  color: #000;
+  margin-left: 20px;
+}
+.rule h3, .rule .ebnf div {
+  font-family: monospace;
+}
+/* Sections: ebnf, railroad*/
+.doc, .ebnf, .railroad {
+  padding-left: 20px;
+}
+.doc h4, .ebnf h4, .railroad h4 {
+  font-size: 12px;
+  margin: 15px 0 10px -20px;
+}
+.ebnf div {
+  background-color: #F7F7F7;
+  border-top: 1px solid #E8E8E8;
+  border-bottom: 1px solid #E8E8E8;
+  padding: 10px 5px;
+}
+.ebnf div .literal {
+  color: #0000FF;
+}
+.ebnf div .keyword {
+  color: #7F0055;
+  font-weight: bold;
+}
+.ebnf div .rule {
+  color: #004084;
+  font-weight: bold;
+}
+.ebnf div .token {
+  font-style:italic;
+}
+.railroad img {
+  display: block;
+}
+footer {
+  float: right;
+}
+</style>
+</head>
+<body>
+<h1><a href="VSLParser.g4.html" name="top">VSLParser</a></h1>
+<p class="gdoc"></p>
+<div class="container">
+<div id="index">
+<h2>Rules</h2>
+<ol>
+  <li><a href="#program">program</a></li>
+  <li><a href="#statement">statement</a></li>
+  <li><a href="#instruction">instruction</a></li>
+  <li><a href="#expression">expression</a></li>
+  <li><a href="#comparison">comparison</a></li>
+  <li><a href="#addition">addition</a></li>
+  <li><a href="#factor">factor</a></li>
+  <li><a href="#primary">primary</a></li>
+</ol>
+</div>
+
+<div id="rules">
+<ul>
+  <li class="rule" id="program">
+  <h3>program <a class="topLink" title="Go to top" href="VSLParser.g4.html">Top</a></h3>
+  <div class="doc">
+    <p>
+    </p>
+  </div>
+  <div class="ebnf">
+  <h4>Text notation:</h4>
+  <div>
+    <span class="rule">program</span> :    <span class="operator">{ TP2.SymbolTable st = new TP2.SymbolTable(); List<TP2.ASD.statements.Statement> stat_list = new ArrayList<TP2.ASD.statements.Statement>(); }</span> <span class="operator">(</span> <a href="#s" class="rule">s</a><span class="operator">=</span><a href="#statement" class="rule">statement</a>[<span class="literal">st</span>] <span class="operator">{st = $s.st_out; stat_list.add($s.out);}</span><span class="operator">)</span><span class="operator">+</span> <span class="keyword">EOF</span> <span class="operator">{ $out = new TP2.ASD.Program(stat_list); }</span> ;
+  </div>
+  </div>
+  <div class="railroad">
+  <h4>Visual notation:</h4>
+  <img border="0" src="images/program.png" />
+  </div>
+  </li>
+  <li class="rule" id="statement">
+  <h3>statement <a class="topLink" title="Go to top" href="VSLParser.g4.html">Top</a></h3>
+  <div class="doc">
+    <p>
+    </p>
+  </div>
+  <div class="ebnf">
+  <h4>Text notation:</h4>
+  <div>
+    <span class="rule">statement</span> :  <a href="#PROTO" class="token">PROTO</a> <a href="#t" class="rule">t</a><span class="operator">=</span><a href="#TYPE" class="token">TYPE</a> <a href="#i" class="rule">i</a><span class="operator">=</span><a href="#IDENT" class="token">IDENT</a> <span class="operator">{List<TP2.SymbolTable.VariableSymbol> args = new ArrayList<>(); String type = "INT";}</span> <a href="#LP" class="token">LP</a> <span class="operator">(</span> <a href="#i2" class="rule">i2</a><span class="operator">=</span><a href="#IDENT" class="token">IDENT</a> <span class="operator">(</span> <a href="#LC" class="token">LC</a> <a href="#RC" class="token">RC</a> <span class="operator">{type = "INTARRAY";}</span> <span class="operator">)</span><span class="operator">?</span> <span class="operator">{args.add(new TP2.SymbolTable.VariableSymbol(TP2.ASD.types.Type.getType(type), $i2.text)); type = "INT";}</span> <span class="operator">(</span><a href="#COMMA" class="token">COMMA</a> <a href="#i3" class="rule">i3</a><span class="operator">=</span><a href="#IDENT" class="token">IDENT</a> <span class="operator">(</span> <a href="#LC" class="token">LC</a> <a href="#RC" class="token">RC</a> <span class="operator">{type = "INTARRAY";}</span> <span class="operator">)</span><span class="operator">?</span> <span class="operator">{args.add(new TP2.SymbolTable.VariableSymbol(TP2.ASD.types.Type.getType(type), $i3.text)); type= "INT";}</span> <span class="operator">)</span><span class="operator">*</span> <span class="operator">)</span><span class="operator">?</span> <a href="#RP" class="token">RP</a> <span class="operator">{ $out = new TP2.ASD.statements.Proto($t.text, $i.text, args, $st_parent); $st_out = $out.getSymbolTable(); }</span> <span class="operator">|</span> <a href="#FUNC" class="token">FUNC</a> <a href="#t" class="rule">t</a><span class="operator">=</span><a href="#TYPE" class="token">TYPE</a> <a href="#i" class="rule">i</a><span class="operator">=</span><a href="#IDENT" class="token">IDENT</a> <span class="operator">{List<TP2.SymbolTable.VariableSymbol> args = new ArrayList<>(); String type = "INT";}</span> <a href="#LP" class="token">LP</a> <span class="operator">(</span> <a href="#i2" class="rule">i2</a><span class="operator">=</span><a href="#IDENT" class="token">IDENT</a> <span class="operator">(</span> <a href="#LC" class="token">LC</a> <a href="#RC" class="token">RC</a> <span class="operator">{type = "INTARRAY";}</span> <span class="operator">)</span><span class="operator">?</span> <span class="operator">{args.add(new TP2.SymbolTable.VariableSymbol(TP2.ASD.types.Type.getType(type), $i2.text)); type = "INT";}</span> <span class="operator">(</span><a href="#COMMA" class="token">COMMA</a> <a href="#i3" class="rule">i3</a><span class="operator">=</span><a href="#IDENT" class="token">IDENT</a> <span class="operator">(</span> <a href="#LC" class="token">LC</a> <a href="#RC" class="token">RC</a> <span class="operator">{type = "INTARRAY";}</span> <span class="operator">)</span><span class="operator">?</span> <span class="operator">{args.add(new TP2.SymbolTable.VariableSymbol(TP2.ASD.types.Type.getType(type), $i3.text)); type= "INT";}</span> <span class="operator">)</span><span class="operator">*</span> <span class="operator">)</span><span class="operator">?</span> <a href="#RP" class="token">RP</a> <span class="operator">{TP2.SymbolTable stFunc = new TP2.SymbolTable($st_parent); for (TP2.SymbolTable.VariableSymbol v : args) stFunc.add(v);  }</span>  <a href="#instr" class="rule">instr</a><span class="operator">=</span><a href="#instruction" class="rule">instruction</a>[<span class="literal">stFunc</span>] <span class="operator">{ TP2.ASD.statements.Func f = new TP2.ASD.statements.Func($t.text, $i.text, args, stFunc, $instr.out); $out = f; $st_out = f.getSymbolTable();}</span> ;
+  </div>
+  </div>
+  <div class="railroad">
+  <h4>Visual notation:</h4>
+  <img border="0" src="images/statement.png" />
+  </div>
+  </li>
+  <li class="rule" id="instruction">
+  <h3>instruction <a class="topLink" title="Go to top" href="VSLParser.g4.html">Top</a></h3>
+  <div class="doc">
+    <p>
+    </p>
+  </div>
+  <div class="ebnf">
+  <h4>Text notation:</h4>
+  <div>
+    <span class="rule">instruction</span> :  <a href="#WHILE" class="token">WHILE</a> <a href="#expression" class="rule">expression</a>[<span class="literal">st_parent</span>] <a href="#DO" class="token">DO</a> <span class="operator">(</span><a href="#instruction" class="rule">instruction</a>[<span class="literal">st_parent</span>] <span class="operator">)</span> <a href="#DONE" class="token">DONE</a> <span class="operator">{$out = new TP2.ASD.instructions.While($expression.out, $instruction.out, $st_parent); $st_return = $st_parent; }</span>   <span class="operator">|</span> <a href="#IF" class="token">IF</a> <a href="#expression" class="rule">expression</a>[<span class="literal">st_parent</span>] <a href="#THEN" class="token">THEN</a> <a href="#tstat" class="rule">tstat</a><span class="operator">=</span><a href="#instruction" class="rule">instruction</a>[<span class="literal">st_parent</span>] <span class="operator">{TP2.ASD.instructions.Instruction else_stat = null, then_stat = $tstat.out;}</span> <span class="operator">(</span> <a href="#ELSE" class="token">ELSE</a> <a href="#es" class="rule">es</a><span class="operator">=</span><a href="#instruction" class="rule">instruction</a>[<span class="literal">st_parent</span>] <span class="operator">{else_stat = $es.out;}</span> <span class="operator">)</span><span class="operator">?</span> <a href="#FI" class="token">FI</a> <span class="operator">{ $out = new TP2.ASD.instructions.If($expression.out, then_stat, else_stat, $st_parent); $st_return = $st_parent; }</span>   <span class="operator">|</span> <a href="#LB" class="token">LB</a> <span class="operator">{List<TP2.ASD.instructions.Instruction> instr_list = new LinkedList<>(); TP2.SymbolTable st_transit = new TP2.SymbolTable($st_parent); }</span> <a href="#s1" class="rule">s1</a><span class="operator">=</span><a href="#instruction" class="rule">instruction</a>[<span class="literal">st_transit</span>] <span class="operator">{st_transit = $s1.st_return; instr_list.add($s1.out);}</span> <span class="operator">(</span><a href="#s2" class="rule">s2</a><span class="operator">=</span><a href="#instruction" class="rule">instruction</a>[<span class="literal">st_transit</span>] <span class="operator">{st_transit = $s2.st_return; instr_list.add($s2.out);}</span><span class="operator">)</span><span class="operator">*</span> <a href="#RB" class="token">RB</a> <span class="operator">{ $out = new TP2.ASD.instructions.Block(instr_list); $st_return = $st_parent; }</span>   <span class="operator">|</span> <a href="#t" class="rule">t</a><span class="operator">=</span><a href="#TYPE" class="token">TYPE</a> <a href="#i1" class="rule">i1</a><span class="operator">=</span><a href="#IDENT" class="token">IDENT</a> <span class="operator">{ List<String> var_declared_names = new ArrayList<>(); List<Integer> sizes = new ArrayList<>(); var_declared_names.add($i1.text); }</span> <span class="operator">(</span><a href="#LC" class="token">LC</a> <a href="#s" class="rule">s</a><span class="operator">=</span><a href="#INTEGER" class="token">INTEGER</a> <a href="#RC" class="token">RC</a> <span class="operator">{sizes.add(Integer.parseInt($s.text));}</span> <span class="operator">|</span> <span class="operator">{sizes.add(new Integer(1));}</span> <span class="operator">)</span> <span class="operator">(</span><a href="#COMMA" class="token">COMMA</a> <a href="#i2" class="rule">i2</a><span class="operator">=</span><a href="#IDENT" class="token">IDENT</a> <span class="operator">{ var_declared_names.add($i2.text); }</span> <span class="operator">(</span><a href="#LC" class="token">LC</a> <a href="#s" class="rule">s</a><span class="operator">=</span><a href="#INTEGER" class="token">INTEGER</a> <a href="#RC" class="token">RC</a> <span class="operator">{sizes.add(Integer.parseInt($s.text));}</span> <span class="operator">|</span> <span class="operator">{sizes.add(new Integer(1));}</span> <span class="operator">)</span> <span class="operator">)</span><span class="operator">*</span> <span class="operator">{ TP2.ASD.instructions.DeclarationInstr dec = new TP2.ASD.instructions.DeclarationInstr($t.text, var_declared_names, $st_parent, sizes); $out = dec; $st_return = $st_parent;}</span>   <span class="operator">|</span> <a href="#i" class="rule">i</a><span class="operator">=</span><a href="#IDENT" class="token">IDENT</a> <span class="operator">{TP2.ASD.expressions.Expression eindex = null;}</span><span class="operator">(</span><a href="#LC" class="token">LC</a> <a href="#e1" class="rule">e1</a><span class="operator">=</span><a href="#expression" class="rule">expression</a>[<span class="literal">st_parent</span>] <span class="operator">{eindex = $e1.out;}</span> <a href="#RC" class="token">RC</a><span class="operator">)</span><span class="operator">?</span> <a href="#ASSIGN" class="token">ASSIGN</a> <a href="#e2" class="rule">e2</a><span class="operator">=</span><a href="#expression" class="rule">expression</a>[<span class="literal">st_parent</span>] <span class="operator">{ $out = new TP2.ASD.instructions.AssignInstr( $i.text, $e2.out, $st_parent, eindex); $st_return = $st_parent;}</span>   <span class="operator">|</span> <a href="#i" class="rule">i</a><span class="operator">=</span><a href="#IDENT" class="token">IDENT</a> <span class="operator">{List<TP2.ASD.expressions.Expression> args = new ArrayList<TP2.ASD.expressions.Expression>();}</span> <a href="#LP" class="token">LP</a> <span class="operator">(</span><a href="#e1" class="rule">e1</a><span class="operator">=</span><a href="#expression" class="rule">expression</a>[<span class="literal">st_parent</span>] <span class="operator">{ args.add($e1.out); }</span> <span class="operator">(</span><a href="#COMMA" class="token">COMMA</a> <a href="#e2" class="rule">e2</a><span class="operator">=</span><a href="#expression" class="rule">expression</a>[<span class="literal">st_parent</span>] <span class="operator">{ args.add($e2.out); }</span> <span class="operator">)</span><span class="operator">*</span><span class="operator">)</span><span class="operator">?</span> <a href="#RP" class="token">RP</a> <span class="operator">{$out = new TP2.ASD.instructions.Call($i.text, $st_parent, args); $st_return = $st_parent;}</span>   <span class="operator">|</span> <a href="#PRINT" class="token">PRINT</a> <span class="operator">{List<Object> l = new ArrayList<>();}</span> <span class="operator">(</span> <a href="#e" class="rule">e</a><span class="operator">=</span><a href="#expression" class="rule">expression</a>[<span class="literal">st_parent</span>] <span class="operator">{l.add($e.out);}</span> <span class="operator">|</span> <a href="#t" class="rule">t</a><span class="operator">=</span><a href="#TEXT" class="token">TEXT</a> <span class="operator">{l.add($t.text);}</span> <span class="operator">)</span> <span class="operator">(</span><a href="#COMMA" class="token">COMMA</a> <span class="operator">(</span> <a href="#e2" class="rule">e2</a><span class="operator">=</span><a href="#expression" class="rule">expression</a>[<span class="literal">st_parent</span>] <span class="operator">{l.add($e2.out);}</span> <span class="operator">|</span> <a href="#t2" class="rule">t2</a><span class="operator">=</span><a href="#TEXT" class="token">TEXT</a> <span class="operator">{l.add($t2.text);}</span> <span class="operator">)</span> <span class="operator">)</span><span class="operator">*</span> <span class="operator">{$out = new TP2.ASD.instructions.Print(l); $st_return = $st_parent;}</span>   <span class="operator">|</span> <a href="#READ" class="token">READ</a> <span class="operator">{List<Object> l = new ArrayList<>();}</span> <a href="#i" class="rule">i</a><span class="operator">=</span><a href="#IDENT" class="token">IDENT</a> <span class="operator">{ l.add($i.text); }</span> <span class="operator">(</span> <a href="#LC" class="token">LC</a> <a href="#e" class="rule">e</a><span class="operator">=</span><a href="#expression" class="rule">expression</a>[<span class="literal">st_parent</span>] <a href="#RC" class="token">RC</a> <span class="operator">{l.add($e.out);}</span><span class="operator">)</span><span class="operator">?</span> <span class="operator">(</span><a href="#COMMA" class="token">COMMA</a> <a href="#i2" class="rule">i2</a><span class="operator">=</span><a href="#IDENT" class="token">IDENT</a> <span class="operator">{l.add($i2.text);}</span> <span class="operator">(</span> <a href="#LC" class="token">LC</a> <a href="#e" class="rule">e</a><span class="operator">=</span><a href="#expression" class="rule">expression</a>[<span class="literal">st_parent</span>] <a href="#RC" class="token">RC</a> <span class="operator">{l.add($e.out);}</span><span class="operator">)</span><span class="operator">?</span> <span class="operator">)</span><span class="operator">*</span> <span class="operator">{$out = new TP2.ASD.instructions.Read(l, $st_parent); $st_return = $st_parent;}</span>   <span class="operator">|</span> <a href="#RETURN" class="token">RETURN</a> <a href="#expression" class="rule">expression</a>[<span class="literal">st_parent</span>] <span class="operator">{$out = new TP2.ASD.instructions.RetourInstr($expression.out); $st_return = $st_parent; }</span> ;
+  </div>
+  </div>
+  <div class="railroad">
+  <h4>Visual notation:</h4>
+  <img border="0" src="images/instruction.png" />
+  </div>
+  </li>
+  <li class="rule" id="expression">
+  <h3>expression <a class="topLink" title="Go to top" href="VSLParser.g4.html">Top</a></h3>
+  <div class="doc">
+    <p>
+    </p>
+  </div>
+  <div class="ebnf">
+  <h4>Text notation:</h4>
+  <div>
+    <span class="rule">expression</span> :  <a href="#l" class="rule">l</a><span class="operator">=</span><a href="#comparison" class="rule">comparison</a>[<span class="literal">st_parent</span>] <a href="#OR" class="token">OR</a> <a href="#r" class="rule">r</a><span class="operator">=</span><a href="#expression" class="rule">expression</a>[<span class="literal">st_parent</span>] <span class="operator">{ $out = new TP2.ASD.expressions.OrExpression($l.out, $r.out); }</span> <span class="operator">|</span> <a href="#l" class="rule">l</a><span class="operator">=</span><a href="#comparison" class="rule">comparison</a>[<span class="literal">st_parent</span>] <a href="#AND" class="token">AND</a> <a href="#r" class="rule">r</a><span class="operator">=</span><a href="#expression" class="rule">expression</a>[<span class="literal">st_parent</span>] <span class="operator">{ $out = new TP2.ASD.expressions.AndExpression($l.out, $r.out); }</span> <span class="operator">|</span> <a href="#NO" class="token">NO</a> <a href="#e" class="rule">e</a><span class="operator">=</span><a href="#expression" class="rule">expression</a>[<span class="literal">st_parent</span>] <span class="operator">{ $out = new TP2.ASD.expressions.NoExpression($e.out); }</span> <span class="operator">|</span> <a href="#c" class="rule">c</a><span class="operator">=</span><a href="#comparison" class="rule">comparison</a>[<span class="literal">st_parent</span>] <span class="operator">{ $out = $c.out; }</span> ;
+  </div>
+  </div>
+  <div class="railroad">
+  <h4>Visual notation:</h4>
+  <img border="0" src="images/expression.png" />
+  </div>
+  </li>
+  <li class="rule" id="comparison">
+  <h3>comparison <a class="topLink" title="Go to top" href="VSLParser.g4.html">Top</a></h3>
+  <div class="doc">
+    <p>
+    </p>
+  </div>
+  <div class="ebnf">
+  <h4>Text notation:</h4>
+  <div>
+    <span class="rule">comparison</span> :  <a href="#l" class="rule">l</a><span class="operator">=</span><a href="#addition" class="rule">addition</a>[<span class="literal">st_parent</span>] <a href="#EQ" class="token">EQ</a> <a href="#r" class="rule">r</a><span class="operator">=</span><a href="#comparison" class="rule">comparison</a>[<span class="literal">st_parent</span>] <span class="operator">{ $out = new TP2.ASD.expressions.EqExpression($l.out, $r.out); }</span> <span class="operator">|</span> <a href="#l" class="rule">l</a><span class="operator">=</span><a href="#addition" class="rule">addition</a>[<span class="literal">st_parent</span>] <a href="#INF" class="token">INF</a> <a href="#r" class="rule">r</a><span class="operator">=</span><a href="#comparison" class="rule">comparison</a>[<span class="literal">st_parent</span>] <span class="operator">{ $out = new TP2.ASD.expressions.InfExpression($l.out, $r.out); }</span> <span class="operator">|</span> <a href="#l" class="rule">l</a><span class="operator">=</span><a href="#addition" class="rule">addition</a>[<span class="literal">st_parent</span>] <a href="#SUP" class="token">SUP</a> <a href="#r" class="rule">r</a><span class="operator">=</span><a href="#comparison" class="rule">comparison</a>[<span class="literal">st_parent</span>] <span class="operator">{ $out = new TP2.ASD.expressions.SupExpression($l.out, $r.out); }</span> <span class="operator">|</span> <a href="#l" class="rule">l</a><span class="operator">=</span><a href="#addition" class="rule">addition</a>[<span class="literal">st_parent</span>] <a href="#INFEQ" class="token">INFEQ</a> <a href="#r" class="rule">r</a><span class="operator">=</span><a href="#comparison" class="rule">comparison</a>[<span class="literal">st_parent</span>] <span class="operator">{ $out = new TP2.ASD.expressions.InfEqExpression($l.out, $r.out); }</span> <span class="operator">|</span> <a href="#l" class="rule">l</a><span class="operator">=</span><a href="#addition" class="rule">addition</a>[<span class="literal">st_parent</span>] <a href="#SUPEQ" class="token">SUPEQ</a> <a href="#r" class="rule">r</a><span class="operator">=</span><a href="#comparison" class="rule">comparison</a>[<span class="literal">st_parent</span>] <span class="operator">{ $out = new TP2.ASD.expressions.SupEqExpression($l.out, $r.out); }</span> <span class="operator">|</span> <a href="#f" class="rule">f</a><span class="operator">=</span><a href="#addition" class="rule">addition</a>[<span class="literal">st_parent</span>] <span class="operator">{ $out = $f.out; }</span> ;
+  </div>
+  </div>
+  <div class="railroad">
+  <h4>Visual notation:</h4>
+  <img border="0" src="images/comparison.png" />
+  </div>
+  </li>
+  <li class="rule" id="addition">
+  <h3>addition <a class="topLink" title="Go to top" href="VSLParser.g4.html">Top</a></h3>
+  <div class="doc">
+    <p>
+    </p>
+  </div>
+  <div class="ebnf">
+  <h4>Text notation:</h4>
+  <div>
+    <span class="rule">addition</span> :  <a href="#l" class="rule">l</a><span class="operator">=</span><a href="#factor" class="rule">factor</a>[<span class="literal">st_parent</span>] <a href="#PLUS" class="token">PLUS</a> <a href="#r" class="rule">r</a><span class="operator">=</span><a href="#addition" class="rule">addition</a>[<span class="literal">st_parent</span>] <span class="operator">{ $out = new TP2.ASD.expressions.AddExpression($l.out, $r.out); }</span> <span class="operator">|</span> <a href="#l" class="rule">l</a><span class="operator">=</span><a href="#factor" class="rule">factor</a>[<span class="literal">st_parent</span>] <a href="#MINUS" class="token">MINUS</a> <a href="#r" class="rule">r</a><span class="operator">=</span><a href="#addition" class="rule">addition</a>[<span class="literal">st_parent</span>] <span class="operator">{ $out = new TP2.ASD.expressions.SubExpression($l.out, $r.out); }</span> <span class="operator">|</span> <a href="#f" class="rule">f</a><span class="operator">=</span><a href="#factor" class="rule">factor</a>[<span class="literal">st_parent</span>] <span class="operator">{ $out = $f.out; }</span> ;
+  </div>
+  </div>
+  <div class="railroad">
+  <h4>Visual notation:</h4>
+  <img border="0" src="images/addition.png" />
+  </div>
+  </li>
+  <li class="rule" id="factor">
+  <h3>factor <a class="topLink" title="Go to top" href="VSLParser.g4.html">Top</a></h3>
+  <div class="doc">
+    <p>
+    </p>
+  </div>
+  <div class="ebnf">
+  <h4>Text notation:</h4>
+  <div>
+    <span class="rule">factor</span> :  <a href="#p" class="rule">p</a><span class="operator">=</span><a href="#primary" class="rule">primary</a>[<span class="literal">st_parent</span>] <span class="operator">{ $out = $p.out; }</span> <span class="operator">|</span> <a href="#l" class="rule">l</a><span class="operator">=</span><a href="#primary" class="rule">primary</a>[<span class="literal">st_parent</span>] <a href="#MODUL" class="token">MODUL</a> <a href="#r" class="rule">r</a><span class="operator">=</span><a href="#factor" class="rule">factor</a>[<span class="literal">st_parent</span>] <span class="operator">{ $out = new TP2.ASD.expressions.ModExpression($l.out, $r.out); }</span> <span class="operator">|</span> <a href="#l" class="rule">l</a><span class="operator">=</span><a href="#primary" class="rule">primary</a>[<span class="literal">st_parent</span>] <a href="#TIMES" class="token">TIMES</a> <a href="#r" class="rule">r</a><span class="operator">=</span><a href="#factor" class="rule">factor</a>[<span class="literal">st_parent</span>] <span class="operator">{ $out = new TP2.ASD.expressions.MulExpression($l.out, $r.out); }</span> <span class="operator">|</span> <a href="#l" class="rule">l</a><span class="operator">=</span><a href="#primary" class="rule">primary</a>[<span class="literal">st_parent</span>] <a href="#DIVID" class="token">DIVID</a> <a href="#r" class="rule">r</a><span class="operator">=</span><a href="#factor" class="rule">factor</a>[<span class="literal">st_parent</span>] <span class="operator">{ $out = new TP2.ASD.expressions.DivExpression($l.out, $r.out); }</span> ;
+  </div>
+  </div>
+  <div class="railroad">
+  <h4>Visual notation:</h4>
+  <img border="0" src="images/factor.png" />
+  </div>
+  </li>
+  <li class="rule" id="primary">
+  <h3>primary <a class="topLink" title="Go to top" href="VSLParser.g4.html">Top</a></h3>
+  <div class="doc">
+    <p>
+    </p>
+  </div>
+  <div class="ebnf">
+  <h4>Text notation:</h4>
+  <div>
+    <span class="rule">primary</span> :  <a href="#in" class="rule">in</a><span class="operator">=</span><a href="#INTEGER" class="token">INTEGER</a> <span class="operator">{ $out = new TP2.ASD.expressions.IntegerExpression($in.int); }</span> <span class="operator">|</span> <a href="#LP" class="token">LP</a> <a href="#e" class="rule">e</a><span class="operator">=</span><a href="#expression" class="rule">expression</a>[<span class="literal">st_parent</span>] <span class="operator">{ $out = new TP2.ASD.expressions.ParentheseExpression($e.out); }</span> <a href="#RP" class="token">RP</a>   <span class="operator">|</span> <a href="#i" class="rule">i</a><span class="operator">=</span><a href="#IDENT" class="token">IDENT</a> <span class="operator">{$out = new TP2.ASD.expressions.VarExpression($i.text, $st_parent);}</span>   <span class="operator">|</span> <a href="#i" class="rule">i</a><span class="operator">=</span><a href="#IDENT" class="token">IDENT</a> <a href="#LC" class="token">LC</a> <a href="#e" class="rule">e</a><span class="operator">=</span><a href="#expression" class="rule">expression</a>[<span class="literal">st_parent</span>] <a href="#RC" class="token">RC</a> <span class="operator">{$out = new TP2.ASD.expressions.TabElementExpression($i.text, $st_parent, $e.out);}</span>   <span class="operator">|</span> <a href="#i" class="rule">i</a><span class="operator">=</span><a href="#IDENT" class="token">IDENT</a> <span class="operator">{ List<TP2.ASD.expressions.Expression> list_args = new LinkedList<TP2.ASD.expressions.Expression>(); }</span> <a href="#LP" class="token">LP</a> <span class="operator">(</span> <a href="#e1" class="rule">e1</a><span class="operator">=</span><a href="#expression" class="rule">expression</a>[<span class="literal">st_parent</span>] <span class="operator">{ list_args.add($e1.out); }</span> <span class="operator">(</span> <a href="#COMMA" class="token">COMMA</a> <a href="#e2" class="rule">e2</a><span class="operator">=</span><a href="#expression" class="rule">expression</a>[<span class="literal">st_parent</span>] <span class="operator">{ list_args.add($e2.out); }</span> <span class="operator">)</span><span class="operator">*</span> <span class="operator">)</span><span class="operator">?</span> <a href="#RP" class="token">RP</a> <span class="operator">{ $out = new TP2.ASD.expressions.CallFuncExpression($i.text, $st_parent, list_args); }</span> ;
+  </div>
+  </div>
+  <div class="railroad">
+  <h4>Visual notation:</h4>
+  <img border="0" src="images/primary.png" />
+  </div>
+  </li>
+</ul>
+</div>
+</div>
+<footer>Generated by: <a href="https://github.com/jknack/antlr4ide">ANTLR 4 IDE</a>. Copyright (c) 2013 <a href="https://twitter.com/edgarespina">Edgar Espina</a></footer>
+</body>
+</html>

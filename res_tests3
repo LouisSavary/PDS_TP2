@@ -1,0 +1,121 @@
+
+FUNC VOID main(f) {
+	INT f
+	f:=100
+	PRINT f 
+}
+100
+
+FUNC VOID main() {
+	INT y
+	READ y
+	{ INT y
+	  READ y
+	  PRINT "y a l'interieur vaut ",y
+	}
+	PRINT ", mais a l'exterieur du bloc il vaut ",y
+}38
+
+FUNC VOID main() {
+	INT x, t[3]
+	READ t[0],t[1],t[2]
+	PRINT t[0], t[1], t[2]
+	}
+3
+
+FUNC VOID main() {
+	INT x,y,z, t[3]
+	READ x,y,z
+	t[0] := x
+	t[1] := y
+	t[2] := z
+	PRINT "t[0] = ", t[0],"\nt[1] = ", t[1],"\nt[2] = ",t[2]
+}
+26
+
+FUNC VOID main() {
+	INT i, t[8],x
+	i := 0
+	WHILE 8-i DO {
+		READ x
+		t[i] := x
+		i:= i+1
+		} DONE
+	i := 0
+	WHILE 8-i DO {
+		PRINT "t[",i,"] = ",t[i],"\n"
+		i:= i+1
+		} DONE
+	}
+
+
+
+
+
+0
+
+PROTO VOID printtab(s,t[])
+
+FUNC VOID main() {
+		INT i, t[8],x
+	i := 0
+	WHILE 8-i DO {
+		READ x
+		t[i] := x
+		i:= i+1
+		} DONE
+	printtab(8,t)
+}
+
+FUNC VOID printtab(size,t[]) {
+	INT i
+	PRINT "Tableau de taille ", size," = ["
+	i := 0
+	WHILE size-i DO {
+		IF i THEN PRINT "," FI
+		PRINT t[i]
+		i:= i+1
+		} DONE
+	PRINT "]\n"
+	}
+2
+
+PROTO VOID readprinttab(s,t[])
+
+FUNC VOID main() {
+	INT i,s,t[2]
+	s := 2
+	readprinttab(s,t)
+	PRINT "Main: Tableau de taille ",s," = ["
+	i := 0
+	WHILE s-i DO {
+		IF i THEN PRINT "," FI
+		PRINT t[i]
+		i:= i+1
+	} 
+	DONE
+	PRINT "]\n"
+	PRINT "Fini"
+}
+
+FUNC VOID readprinttab(size,t[]) {
+	INT i
+	i := 0
+	WHILE size-i DO {
+	        PRINT "entrezno :",i,"  "
+		READ t[i]
+		i:= i+1
+	} 
+	DONE
+	PRINT "Tableau de taille ",size," = ["
+	i := 0
+	WHILE size-i DO {
+		IF i THEN PRINT "," FI
+		PRINT t[i]
+		i:= i+1
+	} 
+	DONE
+	PRINT "]\n"
+}
+4
+

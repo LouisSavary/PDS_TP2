@@ -3,6 +3,8 @@ package TP2;
 import java.util.ArrayList;
 import java.util.List;
 
+import TP2.Utils.LLVMStringConstant;
+
 // This file contains a simple LLVM IR representation
 // and methods to generate its string representation
 
@@ -53,7 +55,13 @@ public class Llvm {
 			r.append("\n\n");
 
 			for (Instruction inst : code) {
+				if (inst instanceof Label 
+						|| inst instanceof Func
+						|| inst instanceof FuncEnd)
 					r.append(inst.toString());
+				else 
+					r.append(Utils.indent(1) + inst.toString());
+
 			}
 			
 			
@@ -90,8 +98,13 @@ public class Llvm {
 	}
 
 	static public class IntArray extends Type {
+		int size;
+		public IntArray (int s) {
+			size = s;
+		}
 		public String toString() {
-			return "";
+			//return "[" + size + " x i32]";
+			return "i32*";
 		}
 	}
 	
@@ -139,17 +152,19 @@ public class Llvm {
 
 	static public class GlobalString extends Instruction {
 		String name;
-		String value;
-		int size;
+		LLVMStringConstant format;
 
-		public GlobalString(String name, String value, int size) {
+		public GlobalString(String name, String value) {
 			this.name = name;
-			this.value = value;
-			this.size = size;
+			this.format = Utils.stringTransform(value);
 		}
 
+		public int length() {
+			return format.length;
+		}
+		
 		public String toString() {
-			return name + " = global [ " + size + " x i8 ] c\"" + value + "\"\n";
+			return name + " = global [ " + format.length + " x i8 ] c\"" + format.str + "\"\n";
 		}
 	}
 	
@@ -400,6 +415,46 @@ public class Llvm {
 		}
 
 	}
+	
+	static public class GetElem extends Instruction {
+		String var_name;
+		String type;
+		String place;
+		String index;
+
+		public GetElem(String type, String var_name, String place, String index) {
+			this.var_name = var_name;
+			this.type = type;
+			this.place = place;
+			this.index = index;
+		}
+
+		public String toString() {
+			// %tmp = getelementptr
+			return place + " = getelementptr " + type + ", " + type + "* " + var_name 
+					+ ", i64 0, i32 " + index + "\n";
+		}
+	}
+
+	static public class GetPtr extends Instruction {
+		String var_name;
+		String type;
+		String place;
+		String index;
+
+		public GetPtr(String type, String var_name, String place, String index) {
+			this.var_name = var_name;
+			this.type = type;
+			this.place = place;
+			this.index = index;
+		}
+
+		public String toString() {
+			// %tmp = getelementptr
+			return place + " = getelementptr " + type + ", " + type + "* " + var_name 
+					+ ", i32 " + index + "\n";
+		}
+	}
 
 	static public class Load extends Instruction {
 		String var_name;
@@ -435,13 +490,13 @@ public class Llvm {
 		}
 	}
 
-	static public class Ident extends Instruction {
+	static public class Call extends Instruction {
 		String var_name;
 		String type;
 		List<String> args;
 		String place;
 
-		public Ident(String var_name, String type, List<String> args, String place) {
+		public Call(String var_name, String type, List<String> args, String place) {
 			this.var_name = var_name;
 			this.type = type;
 			this.args = args;
@@ -465,29 +520,23 @@ public class Llvm {
 				
 			arguments += ")";
 
-			return affectat + " call " + type + " " + var_name + arguments + "\n";
+			return affectat + "call " + type + " " + var_name + arguments + "\n";
 		}
 	}
 
 	static public class Declare extends Instruction {
 		String type;
 		String name;
-		int size;
 
-		public Declare(String type, String name, int size) {
+		public Declare(String type, String name) {
 			this.name = name;
 			this.type = type;
-			this.size = size;
 		}
 
 		@Override
 		public String toString() {
-			if (size == 1)
-				return name + " = alloca " + type + "\n";
-			// return name + " = alloca " + type + "\n";
-			else {
-				return name + " = alloca [" + size + " x " + type + "]" + "\n";
-			}
+			return name + " = alloca " + type + "\n";
+			
 		}
 
 	}
@@ -562,34 +611,25 @@ public class Llvm {
 		Type type;
 		String name;
 		String args;
-		IR code;
 
-		public Func(Type t, String n, String a, IR c) {
+		public Func(Type t, String n, String a) {
 			this.type = t;
 			this.name = n;
 			this.args = a;
-			this.code = c;
 		}
 
 		@Override
 		public String toString() {
-			// construction de la chaine "define %i32 name(args) {"
-			StringBuilder r = new StringBuilder();
-			for (Instruction inst : code.header)
-				r.append(inst);
-			
-			
-			r.append("define " + type.toString() + " " + name + "(" + args + ") {\n");
+			return "define " + type.toString() + " " + name + "(" + args + ") {\n";
+		}
 
-			
-			for (Instruction inst : code.code)
-				if (inst instanceof Label)
-					r.append(inst);
-				else 
-					r.append(Utils.indent(1) + inst);
-			
-			r.append("}\n");
-			return r.toString();
+	}
+	
+	static public class FuncEnd extends Instruction {
+
+		@Override
+		public String toString() {
+			return "}\n\n\n";
 		}
 
 	}

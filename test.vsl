@@ -1,0 +1,24 @@
+FUNC INT test(t[]) {
+	INT i 
+	i := 0
+	WHILE ( 5 - i) DO {
+		t[i] := i
+	} DONE
+	RETURN i
+	
+}
+
+FUNC VOID main() {
+	INT t[5]
+	test(t)
+	PRINT t[4]
+	BOOL i
+	i := 1
+	IF i
+	THEN 
+		PRINT "i vrai"
+	ELSE
+		PRINT "i faux"
+	FI 
+}
+	

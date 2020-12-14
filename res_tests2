@@ -39,7 +39,7 @@ FUNC VOID compare(x,y) IF x-y	THEN PRINT x, " est different de ",y,"\n"
 				FI
 
 
-1
+48
 
 PROTO INT plus(x,y)
 

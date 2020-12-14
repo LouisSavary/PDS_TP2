@@ -1,11 +1,10 @@
 package TP2;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import TP2.ASD.types.Type;
-
-import java.util.HashMap;
-import java.util.List;
 
 // This file contains the symbol table definition.
 // A symbol table contains a set of ident and the
@@ -66,7 +65,7 @@ public class SymbolTable {
   private Map<String, Symbol> table;
   // Parent table
   private SymbolTable parent;
-
+  
   // Construct a new symbol table
   public SymbolTable() {
     this.table = new HashMap<String, Symbol>();
@@ -86,8 +85,14 @@ public class SymbolTable {
     if(res != null) {
       return false;
     }
-
-    this.table.put(sym.ident, sym);
+    
+    String key = sym.ident;
+    
+    // guarantees the uniqueness of the variable names between blocs 
+    sym.ident += this.hashCode();
+    
+    sym.ident = (sym instanceof FunctionSymbol? "@":"%") + sym.ident;
+    this.table.put(key, sym);
     return true;
   }
 

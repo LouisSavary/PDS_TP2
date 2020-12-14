@@ -13,6 +13,8 @@ import TP2.Llvm;
 			return new Bool();
 		else if (type_name.equals(new Void().pp()))
     		return new Void();
+		else if (type_name.equals(new IntArray(0).pp()))
+    		return new IntArray();
 		else 
 			return null;
     }
