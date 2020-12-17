@@ -29,6 +29,6 @@ do
 	echo "________________________________________________"
 	echo ""
 	
-	#rm "$tests_dir/$file_name"
-	#rm "$tests_dir/$file_name.ll"
+	rm "$tests_dir/$file_name"
+	rm "$tests_dir/$file_name.ll"
 done
