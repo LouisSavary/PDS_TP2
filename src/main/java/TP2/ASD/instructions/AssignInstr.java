@@ -37,6 +37,9 @@ public class AssignInstr extends Instruction {
 		
 		if (var == null)
 			throw(new UndeclaredSymbolException("undeclared symbol : " + symbol + " in : " + this.pp()));
+		if (!var.type.equals(new IntArray()) && index != null)
+			throw new TypeException("Cannot index in non-array variable : " + symbol);
+		
 		
 		if (var.type.equals(new IntArray()) && exprRet.type.equals(new Int())) {
 			RetExpression indexRet = null;

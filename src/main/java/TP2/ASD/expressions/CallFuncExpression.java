@@ -27,6 +27,7 @@ public class CallFuncExpression extends Expression {
 		this.identName = name;
 		this.st = st;
 		this.args = args;
+		
 	}
 
 	// Pretty-printer
@@ -54,7 +55,7 @@ public class CallFuncExpression extends Expression {
 			throw new UndeclaredSymbolException("fonction non declarée : " + identName);
 		}
 
-		IR identIR = new Llvm.IR(Llvm.empty(), Llvm.empty());
+		IR callIR = new Llvm.IR(Llvm.empty(), Llvm.empty());
 
 		if (var instanceof FunctionSymbol) {
 
@@ -63,19 +64,12 @@ public class CallFuncExpression extends Expression {
 				if (!(var instanceof FunctionSymbol))
 					throw new UndeclaredSymbolException(identName + " n'est pas declarée comme une fonction");
 
+				// enumeration over arguments, declared and given
 				Iterator<VariableSymbol> param_it = ((FunctionSymbol) var).arguments.iterator();
 				for (Expression expr : args) {
 					RetExpression exprIR = expr.toIR();
-					identIR.append(exprIR.ir);
-					if (exprIR.type.equals(new IntArray())) {
-						String tabptr = Utils.newtmp();
-						identIR.appendCode(new Llvm.GetPtr((new Int()).toLlvmType().toString(), exprIR.result, tabptr, "0"));
-						arg_places.add("i32* " + tabptr);
-	
-					}else {
-						arg_places.add(exprIR.type.toLlvmType().toString()
-								+ " " + exprIR.result);
-					}
+					
+					//verification of the type
 					if (!param_it.hasNext() )
 						throw new UndeclaredSymbolException(identName + " call error : too many parameters ");
 					Symbol expected = param_it.next();
@@ -83,6 +77,19 @@ public class CallFuncExpression extends Expression {
 						throw new TypeException("bad input type for " + identName + " call :\n"
 								+ "expected : " + expected.type.toString() + " " + expected.ident + "\n"
 								+ "found :    " + exprIR.type.toString() + " " + expr.pp());
+
+					
+					callIR.append(exprIR.ir);
+					
+					if (exprIR.type.equals(new IntArray())) {
+						String tabptr = Utils.newtmp();
+						callIR.appendCode(new Llvm.GetPtr((new Int()).toLlvmType().toString(), exprIR.result, tabptr, "0"));
+						arg_places.add("i32* " + tabptr);
+	
+					} else {
+						arg_places.add(exprIR.type.toLlvmType().toString()
+								+ " " + exprIR.result);
+					}
 				}
 			}
 			
@@ -92,9 +99,9 @@ public class CallFuncExpression extends Expression {
 				place = Utils.newtmp();
 			}
 
-			// ajouter une instruction de call si fonction
-			identIR.appendCode(new Llvm.Call("@" + identName, var.type.toLlvmType().toString(), arg_places, place));
-			return new RetExpression(identIR, var.type, place);
+			// ajouter une instruction de call
+			callIR.appendCode(new Llvm.Call("@" + identName, var.type.toLlvmType().toString(), arg_places, place));
+			return new RetExpression(callIR, var.type, place);
 		} else {
 			throw new UndeclaredSymbolException(var.ident + " n'est pas declarée comme une fonction");
 		}

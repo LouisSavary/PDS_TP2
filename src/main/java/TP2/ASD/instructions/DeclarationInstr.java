@@ -13,6 +13,7 @@ import TP2.SymbolTable.VariableSymbol;
 import TP2.ASD.types.Int;
 import TP2.ASD.types.IntArray;
 import TP2.ASD.types.Type;
+import TP2.exceptions.IllegalDeclarationException;
 import TP2.exceptions.TypeException;
 
 public class DeclarationInstr extends Instruction {
@@ -22,7 +23,7 @@ public class DeclarationInstr extends Instruction {
 	SymbolTable st;
 	String errorMsg = null;
 	
-	public DeclarationInstr(String t, List<String> names, SymbolTable st, List<Integer> s) {
+	public DeclarationInstr(String t, List<String> names, SymbolTable st, List<Integer> s) throws IllegalDeclarationException {
 		this.type = Type.getType(t);
 		this.st	= (st);
 		this.vars = new ArrayList<VariableSymbol>(); 
@@ -39,7 +40,9 @@ public class DeclarationInstr extends Instruction {
 				} else if (errorMsg == null)
 					errorMsg = t + " : Mauvais type pour un tableau (seulement INT supporté)";
 
-				st.add(vs);
+				if (!st.add(vs))
+					throw new IllegalDeclarationException("Variable " + name + " : name already used");
+				
 				vars.add(vs);
 			}
 		}

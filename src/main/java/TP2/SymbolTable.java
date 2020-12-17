@@ -39,7 +39,7 @@ public class SymbolTable {
 
   public static class FunctionSymbol extends Symbol {
     public List<VariableSymbol> arguments; // arguments is an ordered list of VariableSymbol
-    boolean defined; // false if declared but not defined
+    public boolean defined; // false if declared but not defined
 
     public FunctionSymbol(Type returnType, String ident, List<VariableSymbol> arguments, boolean defined) {
       this.type = returnType;

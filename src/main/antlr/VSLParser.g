@@ -16,37 +16,38 @@ options {
   import java.util.List;
 }
 
-/*Pourquoi ? ce probleme est interessant
- * Comment ? resolution lds problemes poses, decision prises
- * difficultés ? quelles sont elles et comment resolues
- * extension : pourquoi ? comment ?
- */
-
-
-program returns [TP2.ASD.Program out]
+program returns [TP2.ASD.Program out] 
     : /*global + */  
       { TP2.SymbolTable st = new TP2.SymbolTable(); List<TP2.ASD.statements.Statement> stat_list = new ArrayList<TP2.ASD.statements.Statement>(); }
       ( s=statement[st] {st = $s.st_out; stat_list.add($s.out);})+ EOF
       { $out = new TP2.ASD.Program(stat_list); }
-    ;
-    
-	
+    ; 
+ 	
+//throws TP2.exceptions.IllegalDeclarationException 
+//as antlr don't want me to throw exceptions everywhere i want, i must catch them in the code blocks
 statement [TP2.SymbolTable st_parent] returns [TP2.ASD.statements.Statement out, TP2.SymbolTable st_out]
     : PROTO t=TYPE i=IDENT {List<TP2.SymbolTable.VariableSymbol> args = new ArrayList<>(); String type = "INT"; List<String> name_args_pp = new ArrayList<>();} 
-    	LP ( i2=IDENT ( LC RC {type = "INTARRAY";} )?  {args.add(new TP2.SymbolTable.VariableSymbol(TP2.ASD.types.Type.getType(type), $i2.text)); type = "INT"; name_args_pp.add($i2.text);}
+    	LP 
+    	(       i2=IDENT ( LC RC {type = "INTARRAY";} )?  {args.add(new TP2.SymbolTable.VariableSymbol(TP2.ASD.types.Type.getType(type), $i2.text)); type = "INT"; name_args_pp.add($i2.text);}
 		(COMMA  i3=IDENT ( LC RC {type = "INTARRAY";} )?  {args.add(new TP2.SymbolTable.VariableSymbol(TP2.ASD.types.Type.getType(type), $i3.text)); type= "INT";name_args_pp.add($i3.text);} )* )?
-    	RP { $out = new TP2.ASD.statements.Proto($t.text, $i.text, args, $st_parent, name_args_pp); $st_out = $out.getSymbolTable(); }
+    	RP {
+    		try {
+    			$out = new TP2.ASD.statements.Proto($t.text, $i.text, args, $st_parent, name_args_pp); $st_out = $out.getSymbolTable(); 
+    		} catch(TP2.exceptions.IllegalDeclarationException e ){e.printStackTrace();}
+    	} 
     | FUNC t=TYPE i=IDENT {List<TP2.SymbolTable.VariableSymbol> args = new ArrayList<>(); String type = "INT";List<String> name_args_pp = new ArrayList<>();} 
-    	LP ( i2=IDENT ( LC RC {type = "INTARRAY";} )?  {args.add(new TP2.SymbolTable.VariableSymbol(TP2.ASD.types.Type.getType(type), $i2.text)); type = "INT";name_args_pp.add($i2.text);}
+    	LP 
+    	(      i2=IDENT ( LC RC {type = "INTARRAY";} )?  {args.add(new TP2.SymbolTable.VariableSymbol(TP2.ASD.types.Type.getType(type), $i2.text)); type = "INT";name_args_pp.add($i2.text);}
 		(COMMA i3=IDENT ( LC RC {type = "INTARRAY";} )?  {args.add(new TP2.SymbolTable.VariableSymbol(TP2.ASD.types.Type.getType(type), $i3.text)); type= "INT";name_args_pp.add($i3.text);} )* )?
     	RP 
     	{TP2.SymbolTable stFunc = new TP2.SymbolTable($st_parent); for (TP2.SymbolTable.VariableSymbol v : args) stFunc.add(v);  }//ajout des parametre à la table de symbole
     	instr=instruction[stFunc]
-    	{ TP2.ASD.statements.Func f = new TP2.ASD.statements.Func($t.text, $i.text, args, stFunc, $instr.out, name_args_pp); $out = f; $st_out = f.getSymbolTable();} 
-	; 
+    	{ try {
+    		 TP2.ASD.statements.Func f = new TP2.ASD.statements.Func($t.text, $i.text, args, stFunc, $instr.out, name_args_pp); $out = f; $st_out = f.getSymbolTable();
+		 } catch (TP2.exceptions.IllegalDeclarationException e){e.printStackTrace();} } 
+	;
 	
-	
-instruction [TP2.SymbolTable st_parent] returns [TP2.ASD.instructions.Instruction out, TP2.SymbolTable st_return]
+instruction [TP2.SymbolTable st_parent] returns [TP2.ASD.instructions.Instruction out, TP2.SymbolTable st_return] 
     //While instruction
     : WHILE expression[st_parent] DO (instruction[st_parent] ) DONE {$out = new TP2.ASD.instructions.While($expression.out, $instruction.out, $st_parent); $st_return = $st_parent; }
     //If instruction
@@ -65,7 +66,9 @@ instruction [TP2.SymbolTable st_parent] returns [TP2.ASD.instructions.Instructio
 		(COMMA i2=IDENT { var_declared_names.add($i2.text); } 
 			(LC s=INTEGER RC {sizes.add(Integer.parseInt($s.text));} | {sizes.add(new Integer(1));} )
 		)* 
-		{ TP2.ASD.instructions.DeclarationInstr dec = new TP2.ASD.instructions.DeclarationInstr($t.text, var_declared_names, $st_parent, sizes); $out = dec; $st_return = $st_parent;}
+		{ try {
+			TP2.ASD.instructions.DeclarationInstr dec = new TP2.ASD.instructions.DeclarationInstr($t.text, var_declared_names, $st_parent, sizes); $out = dec; $st_return = $st_parent;
+		} catch (TP2.exceptions.IllegalDeclarationException e) {e.printStackTrace();} }
     //assignment instruction
     | i=IDENT {TP2.ASD.expressions.Expression eindex = null;}(LC  e1=expression[st_parent] {eindex = $e1.out;} RC)?
     	ASSIGN e2=expression[st_parent] { $out = new TP2.ASD.instructions.AssignInstr( $i.text, $e2.out, $st_parent, eindex); $st_return = $st_parent;} 

@@ -1,6 +1,7 @@
 package TP2.ASD.statements;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import TP2.Llvm;
@@ -14,6 +15,7 @@ import TP2.ASD.types.Bool;
 import TP2.ASD.types.Int;
 import TP2.ASD.types.IntArray;
 import TP2.ASD.types.Type;
+import TP2.exceptions.IllegalDeclarationException;
 import TP2.exceptions.TypeException;
 import TP2.exceptions.UndeclaredSymbolException;
 
@@ -25,9 +27,9 @@ public class Func extends Statement {
 	SymbolTable st;
 	Instruction code;
 	
-	public Func(String type, String name, List<VariableSymbol> args, SymbolTable st, Instruction code, List<String> arg_names) {
+	public Func(String t, String name, List<VariableSymbol> args, SymbolTable st, Instruction code, List<String> arg_names) throws IllegalDeclarationException {
 		this.name = name;
-		this.type = Type.getType(type);
+		this.type = Type.getType(t);
 		this.args = args;
 		this.st   = st;
 		this.code = code;
@@ -37,7 +39,48 @@ public class Func extends Statement {
 			this.args_names_pp.add(arg_names.get(i) 
 					+(args.get(i).type.equals(new IntArray())?"[]":""));
 		
-		st.add(new FunctionSymbol(this.type, name, args, true));
+		SymbolTable.Symbol proto = st.lookup(name);
+		
+		if (proto != null) {
+			if (! (proto instanceof FunctionSymbol) || ((FunctionSymbol)proto).defined)
+				throw new IllegalDeclarationException(name + " symbol already exists and isn't prototype");
+			
+			String errorMessage = "function " + name + " : \n";
+			int count = 0;
+			boolean isSignatureEqual = true;
+			Iterator<VariableSymbol> proto_args = ((FunctionSymbol)proto).arguments.iterator();
+			Iterator<VariableSymbol> funct_args = args.iterator();
+			
+			if (!proto.type.equals(type)) {
+				isSignatureEqual = false;
+				errorMessage += "return type mismatch between proto and function\n";
+			}
+			
+			while (isSignatureEqual && proto_args.hasNext() && funct_args.hasNext()) {
+				VariableSymbol proto_arg = proto_args.next();
+				VariableSymbol funct_arg = funct_args.next();
+				if (!proto_arg.type.equals(funct_arg.type)) {
+					isSignatureEqual = false;
+					errorMessage += count + ": mismatch between proto and function signatures : \n"
+							+ "\texpected : " + proto_arg.type.toString() + "\n"
+							+ "\tfound    : " + funct_arg.type.toString() + "\n";
+				}
+				count ++;
+					
+			}
+			
+			if (proto_args.hasNext() != funct_args.hasNext()) {
+				isSignatureEqual = false;
+				errorMessage += "different number of parameters between proto and implementation";
+			}
+			
+			if (!isSignatureEqual)
+				throw new IllegalDeclarationException(errorMessage);
+			
+		}
+		
+		if (!st.add(new FunctionSymbol(this.type, name, args, true)))
+			throw new IllegalDeclarationException("Function " + name + " : name already used");
 	}
 	
 	public SymbolTable getSymbolTable() {

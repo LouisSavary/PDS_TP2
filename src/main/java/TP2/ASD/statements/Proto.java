@@ -11,6 +11,7 @@ import TP2.SymbolTable.FunctionSymbol;
 import TP2.SymbolTable.VariableSymbol;
 import TP2.ASD.types.IntArray;
 import TP2.ASD.types.Type;
+import TP2.exceptions.IllegalDeclarationException;
 import TP2.exceptions.TypeException;
 import TP2.exceptions.UndeclaredSymbolException;
 
@@ -21,7 +22,7 @@ public class Proto extends Statement {
 	List<String> args_names_pp;
 	SymbolTable st;
 	
-	public Proto(String type, String name, List<VariableSymbol> args, SymbolTable st, List<String> arg_names) {
+	public Proto(String type, String name, List<VariableSymbol> args, SymbolTable st, List<String> arg_names) throws IllegalDeclarationException {
 		this.name = name;
 		this.type = Type.getType(type);
 		this.args = args;
@@ -33,7 +34,8 @@ public class Proto extends Statement {
 					+(args.get(i).type.equals(new IntArray())?"[]":""));
 		
 		
-		st.add(new FunctionSymbol(this.type, name, args, false));
+		if (!st.add(new FunctionSymbol(this.type, name, args, false)))
+			throw new IllegalDeclarationException(name + " symbol already declared");
 	}
 	
 	public SymbolTable getSymbolTable() {
@@ -49,12 +51,12 @@ public class Proto extends Statement {
 	public String pp() {
 		String pp_ret = PPIndentation.getIndent() + "PROTO " + type.pp() + " " + name + "(";
 		boolean first = true;
-		for(VariableSymbol vs : args) // ecrit la liste des arguments et leurs types
+		for(VariableSymbol vs : args) // ecrit la liste des arguments 
 			if (first) {
-				pp_ret += vs.type.pp() + " " + vs.ident;
+				pp_ret +=  vs.ident;
 				first = false;
 			} else
-				pp_ret += ", " + vs.type.pp() + " " + vs.ident;
+				pp_ret += ", " + vs.ident;
 
 		pp_ret += ")\n";
 		return pp_ret;
